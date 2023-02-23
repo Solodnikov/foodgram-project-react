@@ -28,14 +28,12 @@ class CustomUser(AbstractUser):
     first_name = models.CharField(
         verbose_name='Имя',
         max_length=settings.USERNAME_MAX_LEN,
-        # unique=True,
         # validators=[validate_username]
     )
 
     last_name = models.CharField(
         verbose_name='Фамилия',
         max_length=settings.USERNAME_MAX_LEN,
-        # unique=True,
         # validators=[validate_username]
     )
 
@@ -50,7 +48,7 @@ class CustomUser(AbstractUser):
 
     password = models.CharField(
         'Пароль',
-        max_length=settings.CODE_LEN,
+        max_length=settings.PASSWORD_MAX_LEN,
         blank=True,
         null=True
     )
@@ -60,6 +58,8 @@ class CustomUser(AbstractUser):
             models.UniqueConstraint(
                 fields=['username', 'email'], name='unique_user'),
         ]
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
 
     def __str__(self):
         return self.username
