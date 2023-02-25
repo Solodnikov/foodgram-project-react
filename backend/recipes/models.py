@@ -147,7 +147,8 @@ class Favourite(models.Model):
         verbose_name = 'Избранное'
 
     def __str__(self):
-        return {self.user}
+        return (
+            f'{self.user} добавил "{self.recipe}" в избранное.')
 
 
 class Shopping_list(models.Model):
@@ -171,5 +172,5 @@ class Shopping_list(models.Model):
 
     def __str__(self):
         return (
-            f'{self.user} добавил "{self.recipe}" в Список покупок'
+            f'{self.user} добавил "{self.recipe}" в Список покупок.'
         )
