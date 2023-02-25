@@ -1,6 +1,9 @@
 from django.contrib import admin
 
-from .models import Ingredient, Recipe, Tag, IngredientsinRecipt
+from .models import (
+    Ingredient, Recipe, Tag, IngredientsinRecipt,
+    Favourite, Shopping_list
+)
 
 
 class IngredientsinReciptInline(admin.TabularInline):
@@ -11,7 +14,6 @@ class IngredientsinReciptInline(admin.TabularInline):
 class RecipeAdmin(admin.ModelAdmin):
     empty_value_display = 'отсутствует'
     list_display = ('name', 'author', 'cooking_time',)
-    # list_display = ('name', 'author', 'cooking_time', 'ingredients', 'tags')
     ordering = ['name']
     search_fields = ['name', ]
     inlines = [IngredientsinReciptInline]
@@ -34,3 +36,5 @@ class TagAdmin(admin.ModelAdmin):
 admin.site.register(Recipe, RecipeAdmin)
 admin.site.register(Ingredient, IngredientAdmin)
 admin.site.register(Tag, TagAdmin)
+admin.site.register(Favourite)
+admin.site.register(Shopping_list)
