@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'users.apps.UsersConfig',  # Подключаем приложение Users
+    'recipes.apps.RecipesConfig', # Подключаем приложение Recipes
     'rest_framework',
 ]
 
