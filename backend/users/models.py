@@ -37,8 +37,6 @@ class CustomUser(AbstractUser):
         # validators=[validate_username]
     )
 
-    # "is_subscribed": false
-
     role = models.CharField(
         'Роль',
         max_length=max(len(role) for role, _ in USER_ROLES),
@@ -67,3 +65,33 @@ class CustomUser(AbstractUser):
     @property
     def is_admin(self):
         return self.role == self.ADMIN or self.is_staff
+
+
+class Sucscribe(models.Model):
+    subscriber = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+        verbose_name='Подписчик',
+        related_name='subscriber'
+    )
+    subscribing = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+        verbose_name='Автор подписки',
+        related_name='subscribing',
+    )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['subscriber', 'subscribing'],
+                name='unique_subscribe'
+            ),
+        ]
+        verbose_name = 'Подписка'
+        verbose_name_plural = 'Подписки'
+
+    def __str__(self):
+        return (
+            f'{self.subscriber} подписан на {self.subscribing}'
+        )

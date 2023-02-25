@@ -88,7 +88,8 @@ class IngredientsinRecipt(models.Model):
     """
     ingredient = models.ForeignKey(
         Ingredient,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        verbose_name='Ингридиент',
     )
     recipe = models.ForeignKey(
         Recipe,
@@ -148,11 +149,12 @@ class Favourite(models.Model):
     )
 
     class Meta:
-        verbose_name = 'Избранное'
+        verbose_name = 'Избранные рецепты'
+        verbose_name_plural = 'Избранные рецепты'
 
     def __str__(self):
         return (
-            f'{self.user} добавил "{self.recipe}" в избранное.')
+            f'{self.user} добавил "{self.recipe}" в Избранные рецепты.')
 
 
 class Shopping_list(models.Model):
@@ -173,6 +175,7 @@ class Shopping_list(models.Model):
 
     class Meta:
         verbose_name = 'Список покупок'
+        verbose_name_plural = 'Список покупок'
 
     def __str__(self):
         return (
