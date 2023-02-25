@@ -37,9 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'users.apps.UsersConfig',  # Подключаем приложение Users
-    'recipes.apps.RecipesConfig', # Подключаем приложение Recipes
+    'users.apps.UsersConfig',  # подключаем приложение Users
+    'recipes.apps.RecipesConfig',  # подключаем приложение Recipes
     'rest_framework',
+    'sorl.thumbnail',  # подключаем sorl-thumbnail для картинок
 ]
 
 MIDDLEWARE = [
@@ -123,6 +124,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # =================My settings=============================
 

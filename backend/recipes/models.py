@@ -46,7 +46,11 @@ class Recipe(models.Model):
         related_name='recipes',
         verbose_name='Тэг',
     )
-    # image =
+    image = models.ImageField(
+        'Изображение',
+        upload_to='recipes/',
+        blank=True,
+    )
 
     class Meta:
         verbose_name = 'Рецепт'
