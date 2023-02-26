@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.conf import settings
+# from django.conf import settings
 # Create your models here.
 
 
@@ -15,25 +15,25 @@ class CustomUser(AbstractUser):
     email = models.EmailField(
         'Почта',
         unique=True,
-        max_length=settings.EMAIL_MAX_LEN
+        max_length=254
     )
 
     username = models.CharField(
         verbose_name='Уникальный юзернейм',
-        max_length=settings.USERNAME_MAX_LEN,
+        max_length=150,
         unique=True,
         # validators=[validate_username]
     )
 
     first_name = models.CharField(
         verbose_name='Имя',
-        max_length=settings.USERNAME_MAX_LEN,
+        max_length=150,
         # validators=[validate_username]
     )
 
     last_name = models.CharField(
         verbose_name='Фамилия',
-        max_length=settings.USERNAME_MAX_LEN,
+        max_length=150,
         # validators=[validate_username]
     )
 
@@ -46,10 +46,12 @@ class CustomUser(AbstractUser):
 
     password = models.CharField(
         'Пароль',
-        max_length=settings.PASSWORD_MAX_LEN,
+        max_length=150,
         blank=True,
-        null=True
+        null=True,
     )
+
+    REQUIRED_FIELDS = ['email', 'first_name', 'last_name', 'password']
 
     class Meta:
         constraints = [

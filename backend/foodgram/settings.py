@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from datetime import timedelta
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -32,14 +33,17 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'django.contrib.admin',
-    'django.contrib.auth',
+    'django.contrib.auth',  # (1)
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',  # (2) подключаем DRF
+    'rest_framework.authtoken',  # подключаем авторизацию по токенам DRF
+    'djoser',  # (3)подключаем приложение DJOSER
     'users.apps.UsersConfig',  # подключаем приложение Users
     'recipes.apps.RecipesConfig',  # подключаем приложение Recipes
-    'rest_framework',
+    'api.apps.ApiConfig',  # подключаем приложение Api
     'sorl.thumbnail',  # подключаем sorl-thumbnail для картинок
 ]
 
@@ -52,6 +56,24 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',  # запрещен доступ без токена
+    ],
+
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',  # аутентификации через токен
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',  # аутентификация через JWTтокен
+    ]
+}
+
+# SIMPLE_JWT = {
+    # Устанавливаем срок жизни токена
+    # 'ACCESS_TOKEN_LIFETIME': timedelta(days=10),
+    # 'AUTH_HEADER_TYPES': ('Bearer',),
+    # 'AUTH_HEADER_NAME':
+# }
 
 
 ROOT_URLCONF = 'foodgram.urls'
@@ -130,6 +152,3 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # =================My settings=============================
 
 AUTH_USER_MODEL = 'users.CustomUser'
-USERNAME_MAX_LEN = 150
-EMAIL_MAX_LEN = 254
-PASSWORD_MAX_LEN = 150
