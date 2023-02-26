@@ -64,16 +64,8 @@ REST_FRAMEWORK = {
 
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',  # аутентификации через токен
-        # 'rest_framework_simplejwt.authentication.JWTAuthentication',  # аутентификация через JWTтокен
     ]
 }
-
-# SIMPLE_JWT = {
-    # Устанавливаем срок жизни токена
-    # 'ACCESS_TOKEN_LIFETIME': timedelta(days=10),
-    # 'AUTH_HEADER_TYPES': ('Bearer',),
-    # 'AUTH_HEADER_NAME':
-# }
 
 
 ROOT_URLCONF = 'foodgram.urls'
@@ -152,3 +144,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # =================My settings=============================
 
 AUTH_USER_MODEL = 'users.CustomUser'
+
+
+DJOSER = {
+    'HIDE_USERS': False,
+}
