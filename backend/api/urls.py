@@ -1,10 +1,14 @@
-# from django.urls import path
-# from django.urls import include
+from django.urls import include, path
+from rest_framework.routers import DefaultRouter
 
-# urlpatterns = [
-#     # Djoser создаст набор необходимых эндпоинтов.
-#     # базовые, для управления пользователями в Django:
-#     path('', include('djoser.urls')),
-#     # JWT-эндпоинты, для управления JWT-токенами:
-#     path('', include('djoser.urls.jwt')),
-# ]
+from .views import IngredientViewSet, TagViewSet
+
+app_name = 'api'
+
+router = DefaultRouter()
+router.register('tags', TagViewSet)
+router.register('ingredients', IngredientViewSet)
+
+urlpatterns = [
+    path('', include(router.urls)),
+]

@@ -1,15 +1,13 @@
-from rest_framework import mixins
 from rest_framework import viewsets
-from recipes.models import Tag
-from .serializers import TagSerializer
+from recipes.models import Tag, Ingredient
+from .serializers import TagSerializer, IngredientSerializer
 
 
-class ListRetrieveViewSet(mixins.ListModelMixin,
-                          mixins.RetrieveModelMixin,
-                          viewsets.GenericViewSet):
-    pass
-
-
-class TagViewSet(ListRetrieveViewSet):
+class TagViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+
+
+class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Ingredient.objects.all()
+    serializer_class = IngredientSerializer
