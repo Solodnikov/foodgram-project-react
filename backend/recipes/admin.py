@@ -13,7 +13,7 @@ class IngredientsinReciptInline(admin.TabularInline):
 
 class RecipeAdmin(admin.ModelAdmin):
     empty_value_display = 'отсутствует'
-    list_display = ('name', 'author', 'cooking_time',)
+    list_display = ('id', 'name', 'author', 'cooking_time',)
     ordering = ['name']
     search_fields = ['name', ]
     inlines = [IngredientsinReciptInline]
