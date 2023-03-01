@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from recipes.models import Tag, Ingredient, Favourite
+from recipes.models import Tag, Ingredient, Favourite, CustomUser
+from users.models import Subscribe
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -25,3 +26,22 @@ class ShoppingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favourite
         fields = ('user', 'recipe')
+
+
+class CustomUserSerializer(serializers.ModelSerializer):
+    is_subscribed = serializers.SerializerMethodField()
+
+    class Meta:
+        model = CustomUser
+        fields = (
+            'email', 'username', 'first_name',
+            'first_name', 'is_subscribed',
+        )
+        # read_only_fields = ('id',)
+
+    def get_is_subscribed(self, obj):
+        request_user = self.context.get('request').user
+        return Subscribe.objects.filter(
+            subscriber=request_user,
+            subscribing=obj
+        ).exists()

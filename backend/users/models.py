@@ -5,12 +5,12 @@ from django.contrib.auth.models import AbstractUser
 
 
 class CustomUser(AbstractUser):
-    ADMIN = 'admin'
-    USER = 'user'
-    USER_ROLES = (
-        (USER, 'Пользователь'),
-        (ADMIN, 'Администратор'),
-    )
+    # ADMIN = 'admin'
+    # USER = 'user'
+    # USER_ROLES = (
+    #     (USER, 'Пользователь'),
+    #     (ADMIN, 'Администратор'),
+    # )
 
     email = models.EmailField(
         'Почта',
@@ -37,12 +37,12 @@ class CustomUser(AbstractUser):
         # validators=[validate_username]
     )
 
-    role = models.CharField(
-        'Роль',
-        max_length=max(len(role) for role, _ in USER_ROLES),
-        default=USER,
-        choices=USER_ROLES
-    )
+    # role = models.CharField(
+    #     'Роль',
+    #     max_length=max(len(role) for role, _ in USER_ROLES),
+    #     default=USER,
+    #     choices=USER_ROLES
+    # )
 
     password = models.CharField(
         'Пароль',
@@ -64,12 +64,12 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.username
 
-    @property
-    def is_admin(self):
-        return self.role == self.ADMIN or self.is_staff
+    # @property
+    # def is_admin(self):
+    #     return self.role == self.ADMIN or self.is_staff
 
 
-class Sucscribe(models.Model):
+class Subscribe(models.Model):
     subscriber = models.ForeignKey(
         CustomUser,
         on_delete=models.CASCADE,
