@@ -20,9 +20,9 @@ class CustomUserViewSet(UserViewSet):
     #     return Response(serialiser.data)
 
     #  КОСТЫЛЬ ДЛЯ ПОЛУЧЕНИЯ is_subscribed В /api/users/me/
-    def get_serializer_class(self):
-        if self.action == 'list' or (
-            self.action == 'me' or self.action == 'retrieve'
-        ):
-            return CustomUserSerializer
-        return super().get_serializer_class()
+    # def get_serializer_class(self):
+    #     if self.action == 'list' or (
+    #         self.action == 'me' or self.action == 'retrieve'
+    #     ):
+    #         return CustomUserSerializer
+    #     return super().get_serializer_class()

@@ -149,9 +149,11 @@ AUTH_USER_MODEL = 'users.CustomUser'
 DJOSER = {
     'HIDE_USERS': False,
     'PERMISSIONS': {
-        'user_list': ('rest_framework.permissions.AllowAny',)
+        'user_list': ('rest_framework.permissions.AllowAny',),
     },
     'SERIALIZERS': {
         'user': 'users.serializers.CustomUserSerializer',
+        'current_user': 'users.serializers.CustomUserSerializer',
+
     },
 }
