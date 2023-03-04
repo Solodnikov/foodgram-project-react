@@ -1,16 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+
+
 # from django.conf import settings
 # Create your models here.
 
 
 class CustomUser(AbstractUser):
-    # ADMIN = 'admin'
-    # USER = 'user'
-    # USER_ROLES = (
-    #     (USER, 'Пользователь'),
-    #     (ADMIN, 'Администратор'),
-    # )
 
     email = models.EmailField(
         'Почта',
@@ -37,13 +33,6 @@ class CustomUser(AbstractUser):
         # validators=[validate_username]
     )
 
-    # role = models.CharField(
-    #     'Роль',
-    #     max_length=max(len(role) for role, _ in USER_ROLES),
-    #     default=USER,
-    #     choices=USER_ROLES
-    # )
-
     password = models.CharField(
         'Пароль',
         max_length=150,
@@ -51,7 +40,8 @@ class CustomUser(AbstractUser):
         null=True,
     )
 
-    REQUIRED_FIELDS = ['email', 'first_name', 'last_name', 'password']
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'password']
+    USERNAME_FIELD = 'email'
 
     class Meta:
         constraints = [
@@ -63,10 +53,6 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username
-
-    # @property
-    # def is_admin(self):
-    #     return self.role == self.ADMIN or self.is_staff
 
 
 class Subscribe(models.Model):
