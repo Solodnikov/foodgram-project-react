@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from recipes.models import Tag, Ingredient, Favourite, CustomUser
+from recipes.models import Tag, Ingredient, Favourite, CustomUser, Recipe
+from users.models import CustomUser
 from users.models import Subscribe
 
 
@@ -45,3 +46,11 @@ class CustomUserSerializer(serializers.ModelSerializer):
             subscriber=request_user,
             subscribing=obj
         ).exists()
+
+
+class RecipeSerialiser(serializers.ModelSerializer):
+
+    class Meta:
+        model = Recipe
+        fields = ('__all__')
+

@@ -3,9 +3,10 @@ from recipes.models import Favourite, Ingredient, Recipe, Shopping_list, Tag
 from rest_framework import mixins, status, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from .pagination import RecipePagination
 
 from .serializers import (FavouriteSerializer, IngredientSerializer,
-                          TagSerializer, ShoppingSerializer)
+                          RecipeSerialiser, ShoppingSerializer, TagSerializer)
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
@@ -88,3 +89,9 @@ class ShoppingApiView(APIView):
             ).delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class RecipeViewSet(viewsets.ModelViewSet):
+    queryset = Recipe.objects.all()
+    serializer_class = RecipeSerialiser
+    pagination_class = RecipePagination
