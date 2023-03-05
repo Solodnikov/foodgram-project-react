@@ -90,6 +90,7 @@ class IngredientsinRecipt(models.Model):
         Ingredient,
         on_delete=models.CASCADE,
         verbose_name='Ингридиент',
+        related_name='ingredient',
     )
     recipe = models.ForeignKey(
         Recipe,
