@@ -50,6 +50,7 @@ class Recipe(models.Model):
         'Изображение',
         upload_to='recipes/',
         blank=True,
+        null=True
     )
 
     class Meta:

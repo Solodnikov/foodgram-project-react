@@ -31,9 +31,20 @@ class IngredientSerializer(serializers.ModelSerializer):
 
 
 class FavouriteSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField(source='recipe.id')
+    name = serializers.ReadOnlyField(source='recipe.name')
+    # image = serializers.ReadOnlyField(source='recipe.image', default='null')
+    cooking_time = serializers.ReadOnlyField(source='recipe.cooking_time')
+
     class Meta:
         model = Favourite
-        fields = ('user', 'recipe')
+        fields = (
+            'id',
+            'user',
+            'name',
+            'cooking_time',
+            'recipe'
+        )
 
 
 class ShoppingSerializer(serializers.ModelSerializer):
