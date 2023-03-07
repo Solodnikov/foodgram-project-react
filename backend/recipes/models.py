@@ -5,15 +5,7 @@ from users.models import CustomUser
 
 
 class Recipe(models.Model):
-    """ Рецепты. Основная модель.
-    Имеет связи через related_name c объектами других моделей:
-    author --> CustomUser,
-    ingredients --> Ingredient,
-    ingredient_list --> IngredientsinRecipt,
-    tags --> Tag,
-    favourites --> Favourite,
-    shop_list --> Shopping_list,
-    """
+    """ Рецепты. Основная модель."""
     name = models.CharField(
         max_length=200,
         unique=True,

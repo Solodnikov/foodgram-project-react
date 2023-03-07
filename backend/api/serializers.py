@@ -31,20 +31,21 @@ class IngredientSerializer(serializers.ModelSerializer):
 
 
 class FavouriteSerializer(serializers.ModelSerializer):
-    id = serializers.ReadOnlyField(source='recipe.id')
-    name = serializers.ReadOnlyField(source='recipe.name')
-    # image = serializers.ReadOnlyField(source='recipe.image', default='null')
-    cooking_time = serializers.ReadOnlyField(source='recipe.cooking_time')
 
     class Meta:
         model = Favourite
         fields = (
-            'id',
             'user',
-            'name',
-            'cooking_time',
             'recipe'
         )
+
+    def to_representation(self, instance):
+        return {
+            'id': instance.recipe.id,
+            'name': instance.recipe.name,
+            # 'image': instance.recipe.image,
+            'cooking_time': instance.recipe.cooking_time,
+        }
 
 
 class ShoppingSerializer(serializers.ModelSerializer):
