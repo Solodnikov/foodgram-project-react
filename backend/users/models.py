@@ -8,17 +8,17 @@ from django.contrib.auth.models import AbstractUser
 
 class CustomUser(AbstractUser):
 
-    email = models.EmailField(
-        'Почта',
-        unique=True,
-        max_length=254
-    )
-
     username = models.CharField(
         verbose_name='Уникальный юзернейм',
         max_length=150,
         unique=True,
         # validators=[validate_username]
+    )
+
+    email = models.EmailField(
+        'Почта',
+        unique=True,
+        max_length=254
     )
 
     first_name = models.CharField(
@@ -40,7 +40,7 @@ class CustomUser(AbstractUser):
         null=True,
     )
 
-    REQUIRED_FIELDS = ['first_name', 'last_name', 'password']
+    REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'password']
     USERNAME_FIELD = 'email'
 
     class Meta:

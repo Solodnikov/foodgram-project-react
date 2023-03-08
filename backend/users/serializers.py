@@ -20,3 +20,13 @@ class CustomUserSerializer(UserSerializer):
             subscriber=request_user,
             subscribing=obj
         ).exists()
+
+
+class UserCreateSerializer(UserCreateSerializer):
+    """ Сериализатор создания пользователя """
+
+    class Meta:
+        model = CustomUser
+        fields = (
+            'email', 'username', 'first_name',
+            'last_name', 'password')

@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .pagination import RecipePagination
 
-from .serializers import (FavouriteSerializer, IngredientSerializer,
+from .serializers import (FavouriteSerializer, IngredientSerializer, RecipeCreateSerialiser,
                           RecipeSerialiser, ShoppingSerializer, TagSerializer)
 
 
@@ -92,6 +92,19 @@ class ShoppingApiView(APIView):
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
+    """
+    Вьюсет для действий с рецептами.
+    """
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerialiser
     pagination_class = RecipePagination
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return RecipeSerialiser
+        return RecipeCreateSerialiser
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context.update({'request': self.request})
+        return context

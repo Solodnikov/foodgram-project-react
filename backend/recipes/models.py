@@ -2,6 +2,7 @@ from django.core.validators import MinValueValidator
 from django.db import models
 # from django.conf import settings
 from users.models import CustomUser
+from django.db.models import UniqueConstraint
 
 
 class Recipe(models.Model):
@@ -35,14 +36,16 @@ class Recipe(models.Model):
     )
     tags = models.ManyToManyField(
         'Tag',
-        related_name='recipes',
+        related_name='tags',  ## изменение
+        through='TaginRecipe',
         verbose_name='Тэг',
     )
     image = models.ImageField(
         'Изображение',
-        upload_to='recipes/',
+        upload_to='recipes/images/',
         blank=True,
-        null=True
+        null=True,
+        default=None,
     )
 
     class Meta:
@@ -124,6 +127,29 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class TaginRecipe(models.Model):
+    """ Модель связи тега и рецепта. """
+
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        verbose_name='Рецепт'
+    )
+    tag = models.ForeignKey(
+        Tag,
+        on_delete=models.CASCADE,
+        verbose_name='Тег'
+    )
+
+    class Meta:
+        constraints = [
+            UniqueConstraint(
+                fields=['recipe', 'tag'],
+                name='recipe_tag_unique'
+            )
+        ]
 
 
 class Favourite(models.Model):
