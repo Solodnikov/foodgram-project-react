@@ -202,7 +202,7 @@ class RecipeCreateSerialiser(serializers.ModelSerializer):
 
 class ShortRecipeSerialiser(serializers.ModelSerializer):
     """
-    Сериалайзер для представления кратких сведений о рецепте.
+    Сериалайзер для представления кратких сведений рецепта.
     """
     class Meta:
         model = Recipe

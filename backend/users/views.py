@@ -9,6 +9,7 @@ from .pagination import CustomUserPagination
 # from rest_framework.permissions import AllowAny
 from .permissions import CustomUserPermission
 from .serializers import CustomUserSerializer, SubscribeSerializer
+from django.shortcuts import get_object_or_404
 
 
 class CustomUserViewSet(UserViewSet):
@@ -34,3 +35,14 @@ class SubscribeApiView(APIView):
                 return Response(
                     serializer.data, status=status.HTTP_201_CREATED)
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id):
+        user = request.user.id
+        subscribing = id
+        if Subscribe.objects.filter(subscriber=user,
+                                    subscribing=subscribing).exists():
+            subscription = get_object_or_404(
+                Subscribe, subscriber=user, subscribing=subscribing)
+            subscription.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
