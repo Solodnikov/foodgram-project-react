@@ -20,9 +20,6 @@ class CustomUserViewSet(UserViewSet):
 class SubscribeApiView(APIView):
     """ Добавление/удаление подписки на автора. """
 
-    # permission_classes = [IsAuthenticated, ]
-    # pagination_class = CustomPagination
-
     def post(self, request, id):
         data = {
             'subscriber': request.user.id,
