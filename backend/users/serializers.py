@@ -30,3 +30,11 @@ class UserCreateSerializer(UserCreateSerializer):
         fields = (
             'email', 'username', 'first_name',
             'last_name', 'password')
+
+
+class SubscribeSerializer(serializers.ModelSerializer):
+    """ Сериализатор создания пользователя """
+
+    class Meta:
+        model = Subscribe
+        fields = ('subscriber', 'subscribing')

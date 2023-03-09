@@ -6,7 +6,7 @@ from users.serializers import CustomUserSerializer
 
 
 class TagSerializer(serializers.ModelSerializer):
-    """ Сериализатор просмотра тегов """
+    """ Сериализатор для просмотра тегов """
     class Meta:
         model = Tag
         fields = ('id', 'name', 'color', 'slug')
@@ -27,21 +27,6 @@ class IngredientsinReciptSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'amount', 'measurement_unit')
 
 
-# class IngredientsinReciptCreateSerializer(serializers.ModelSerializer):
-#     """
-#     Сериалайзер для представления сведений об игредиентах в рецепте.
-#     """
-#     id = serializers.ReadOnlyField(source='ingredient.id')
-#     name = serializers.ReadOnlyField(source='ingredient.name')
-#     measurement_unit = serializers.ReadOnlyField(
-#         source='ingredient.measurement_unit'
-#     )
-
-#     class Meta:
-#         model = IngredientsinRecipt
-#         fields = ('id', 'name', 'amount', 'measurement_unit')
-
-
 class IngredientSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -50,27 +35,35 @@ class IngredientSerializer(serializers.ModelSerializer):
 
 
 class FavouriteSerializer(serializers.ModelSerializer):
+    """
+    Сериалайзер для создания и удаления. Избранные рецепты.
+    """
 
     class Meta:
         model = Favourite
-        fields = (
-            'user',
-            'recipe'
-        )
+        fields = ('user', 'recipe')
 
     def to_representation(self, instance):
-        return {
-            'id': instance.recipe.id,
-            'name': instance.recipe.name,
-            # 'image': instance.recipe.image,
-            'cooking_time': instance.recipe.cooking_time,
-        }
-
-
+        return ShortRecipeSerialiser(
+            instance.recipe,
+            context={'request': self.context.get('request')}
+        ).data
+    
+    
 class ShoppingSerializer(serializers.ModelSerializer):
+    """
+    Сериалайзер для создания и удаления. Список покупок.
+    """
+
     class Meta:
         model = Shopping_list
         fields = ('user', 'recipe')
+
+    def to_representation(self, instance):
+        return ShortRecipeSerialiser(
+            instance.recipe,
+            context={'request': self.context.get('request')}
+        ).data
 
 
 class RecipeSerialiser(serializers.ModelSerializer):
@@ -205,3 +198,12 @@ class RecipeCreateSerialiser(serializers.ModelSerializer):
         return RecipeSerialiser(instance, context={
             'request': self.context.get('request')
         }).data
+
+
+class ShortRecipeSerialiser(serializers.ModelSerializer):
+    """
+    Сериалайзер для представления кратких сведений о рецепте.
+    """
+    class Meta:
+        model = Recipe
+        fields = ('id', 'name', 'image', 'cooking_time')
