@@ -61,7 +61,7 @@ class ShowSubscribeSerializer(serializers.ModelSerializer):
     """ Сериалайзер для отображения подписки. """
     is_subscribed = serializers.SerializerMethodField()
     recipes = serializers.SerializerMethodField()
-    # recipes_count = serializers.SerializerMethodField()
+    recipes_count = serializers.SerializerMethodField()
 
     class Meta:
         model = CustomUser
@@ -73,7 +73,7 @@ class ShowSubscribeSerializer(serializers.ModelSerializer):
             'last_name',
             'is_subscribed',
             "recipes",
-            # "recipes_count",
+            "recipes_count",
         )
 
     def get_is_subscribed(self, obj):
@@ -93,6 +93,6 @@ class ShowSubscribeSerializer(serializers.ModelSerializer):
             many=True,
             context={'request': request}).data
 
-    # def get_recipes_count(self, obj):
-    #     pass
-
+    def get_recipes_count(self, obj):
+        recipes = Recipe.objects.filter(author=obj)
+        return recipes.count()
