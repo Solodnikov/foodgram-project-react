@@ -48,8 +48,8 @@ class FavouriteSerializer(serializers.ModelSerializer):
             instance.recipe,
             context={'request': self.context.get('request')}
         ).data
-    
-    
+
+
 class ShoppingSerializer(serializers.ModelSerializer):
     """
     Сериалайзер для создания и удаления. Список покупок.

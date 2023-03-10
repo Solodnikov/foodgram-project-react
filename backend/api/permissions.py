@@ -1,7 +1,7 @@
 from rest_framework import permissions
 
 
-class CustomUserPermission(permissions.BasePermission):
+class AuthorAdminAndReadPermission(permissions.BasePermission):
 
     def has_permission(self, request, view):
         return (
@@ -11,8 +11,8 @@ class CustomUserPermission(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         return (
-            # request.method in permissions.SAFE_METHODS
-            obj.id == request.user
+            request.method in permissions.SAFE_METHODS
+            or obj.author == request.user
             or request.user.is_staff
             or request.user.is_superuser
         )

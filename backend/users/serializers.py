@@ -96,3 +96,9 @@ class ShowSubscribeSerializer(serializers.ModelSerializer):
     def get_recipes_count(self, obj):
         recipes = Recipe.objects.filter(author=obj)
         return recipes.count()
+
+    # def validate(self, data):
+    #     request = self.context.get('request')
+    #     if data['id'] == request.user.id:
+    #         raise serializers.ValidationError(detail='eni')
+    #     return data

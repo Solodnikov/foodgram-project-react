@@ -1,12 +1,14 @@
 from django.shortcuts import get_object_or_404
 from recipes.models import Favourite, Ingredient, Recipe, Shopping_list, Tag
-from rest_framework import mixins, status, viewsets
+from rest_framework import permissions, status, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .pagination import RecipePagination
+from api.permissions import AuthorAdminAndReadPermission
 
-from .serializers import (FavouriteSerializer, IngredientSerializer, RecipeCreateSerialiser,
-                          RecipeSerialiser, ShoppingSerializer, TagSerializer)
+from .pagination import RecipePagination
+from .serializers import (FavouriteSerializer, IngredientSerializer,
+                          RecipeCreateSerialiser, RecipeSerialiser,
+                          ShoppingSerializer, TagSerializer)
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
@@ -19,22 +21,10 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = IngredientSerializer
 
 
-class CreateDestroyViewSet(mixins.CreateModelMixin,
-                           mixins.DestroyModelMixin,
-                           viewsets.GenericViewSet):
-    pass
-
-
-class FavouriteViewSet(CreateDestroyViewSet):
-    serializer_class = FavouriteSerializer
-    queryset = Favourite.objects.all()
-
-
 class FavouriteApiView(APIView):
     """ Добавление/удаление рецепта из избранного. """
 
-    # permission_classes = [IsAuthenticated, ]
-    # pagination_class = CustomPagination
+    permission_classes = (permissions.IsAuthenticated, )
 
     def post(self, request, id):
         data = {
@@ -61,6 +51,10 @@ class FavouriteApiView(APIView):
 
 
 class ShoppingApiView(APIView):
+    """ Добавление/удаление рецепта из списка покупок. """
+
+    permission_classes = (permissions.IsAuthenticated, )
+
     def post(self, request, id):
         data = {
             'user': request.user.id,
@@ -98,6 +92,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerialiser
     pagination_class = RecipePagination
+    permission_classes = (AuthorAdminAndReadPermission, )
 
     def get_serializer_class(self):
         if self.request.method == 'GET':

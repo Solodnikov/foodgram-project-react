@@ -1,25 +1,23 @@
+from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet
-from rest_framework import mixins, status, viewsets
-from rest_framework.decorators import action
+from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Subscribe
 from .pagination import CustomUserPagination
-# from rest_framework.permissions import AllowAny
 from .permissions import CustomUserPermission
-from .serializers import CustomUserSerializer, SubscribeSerializer
-from django.shortcuts import get_object_or_404
+from .serializers import SubscribeSerializer
 
 
 class CustomUserViewSet(UserViewSet):
-    # serializer_class = CustomUserSerializer
     pagination_class = CustomUserPagination
     permission_classes = (CustomUserPermission, )
 
 
 class SubscribeApiView(APIView):
     """ Добавление/удаление подписки на автора. """
+    permission_classes = (permissions.IsAuthenticated, )
 
     def post(self, request, id):
         data = {
@@ -35,6 +33,7 @@ class SubscribeApiView(APIView):
                 return Response(
                     serializer.data, status=status.HTTP_201_CREATED)
             return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, id):
         user = request.user.id
