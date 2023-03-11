@@ -207,3 +207,35 @@ class ShortRecipeSerialiser(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = ('id', 'name', 'image', 'cooking_time')
+
+    # class ShowShoppingListSerializer(serializers.ModelSerializer):
+    #     """ Сериалайзер показа списка ингредиентов."""
+
+    #     pass
+
+
+# class ShoppingListSerializer(serializers.ModelSerializer):
+#     """
+#     Сериалайзер для создания списка Ингредиентов из Списка покупок.
+#     """
+#     ingredient = serializers.SerializerMethodField(many=True)
+#     # ingredient_amount = serializers.SerializerMethodField()
+#     # recipe_list = 
+
+#     class Meta:
+#         model = Shopping_list
+#         fields = ('ingredient')
+
+#     def get_ingredient(self, obj):
+#         return 
+
+
+#         def get_ingredients(self, obj):
+#         ingredients = IngredientsinRecipt.objects.filter(recipe=obj)
+#         return IngredientsinReciptSerializer(ingredients, many=True).data
+
+#     def to_representation(self, instance):
+#         return ShowShoppingListSerializer(instance.recipe,
+#             context={'request': self.context.get('request')}
+#         ).data
+    
