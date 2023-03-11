@@ -36,7 +36,7 @@ class Recipe(models.Model):
     )
     tags = models.ManyToManyField(
         'Tag',
-        related_name='tags',  ## изменение
+        related_name='tags',
         through='TaginRecipe',
         verbose_name='Тэг',
     )
@@ -62,7 +62,6 @@ class Ingredient(models.Model):
     """
     name = models.CharField(
         max_length=200,
-        # unique=True,
         verbose_name='Название'
     )
     measurement_unit = models.CharField(
