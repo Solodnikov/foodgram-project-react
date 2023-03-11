@@ -62,7 +62,7 @@ class Ingredient(models.Model):
     """
     name = models.CharField(
         max_length=200,
-        unique=True,
+        # unique=True,
         verbose_name='Название'
     )
     measurement_unit = models.CharField(
@@ -73,9 +73,16 @@ class Ingredient(models.Model):
     class Meta:
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
+        constraints = [
+            UniqueConstraint(
+                fields=['name', 'measurement_unit'],
+                name='ingredient_unique'
+            )
+        ]
 
     def __str__(self):
-        return self.name
+        return (
+            f'"{self.name}" c мерой измерения "{self.measurement_unit}".')
 
 
 class IngredientsinRecipt(models.Model):
