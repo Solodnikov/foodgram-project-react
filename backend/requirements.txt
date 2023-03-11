@@ -15,8 +15,8 @@ djoser
 # djoser==2.1.0
 drf-extra-fields==3.4.1
 # flake8
-flake8==6.0.0
-# flake8==5.0.4
+# flake8==6.0.0
+flake8==5.0.4
 idna==3.4
 # importlib-metadata
 importlib-metadata==6.0.0
