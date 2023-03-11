@@ -11,11 +11,13 @@ django-filter==22.1
 django-templated-mail==1.1.1
 djangorestframework==3.14.0
 djangorestframework-simplejwt==4.8.0
-djoser==2.1.0
+djoser
+# djoser==2.1.0
 drf-extra-fields==3.4.1
 flake8==5.0.4
 idna==3.4
-importlib-metadata==6.0.0
+importlib-metadata
+# importlib-metadata==6.0.0
 itypes==1.2.0
 Jinja2==3.1.2
 Markdown==3.4.1
