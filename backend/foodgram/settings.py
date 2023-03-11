@@ -32,18 +32,19 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'django.contrib.admin',
-    'django.contrib.auth',  # (1)
+    'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',  # (2) подключаем DRF
-    'rest_framework.authtoken',  # подключаем авторизацию по токенам DRF
-    'djoser',  # (3)подключаем приложение DJOSER
-    'users.apps.UsersConfig',  # подключаем приложение Users
-    'recipes.apps.RecipesConfig',  # подключаем приложение Recipes
-    'api.apps.ApiConfig',  # подключаем приложение Api
-    'sorl.thumbnail',  # подключаем sorl-thumbnail для картинок
+    'rest_framework',
+    'django_filters',
+    'rest_framework.authtoken',
+    'djoser',
+    'users.apps.UsersConfig',
+    'recipes.apps.RecipesConfig',
+    'api.apps.ApiConfig',
+    'sorl.thumbnail',
 ]
 
 MIDDLEWARE = [
@@ -58,12 +59,11 @@ MIDDLEWARE = [
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        # 'rest_framework.permissions.IsAuthenticated',  # запрещен доступ без токена
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
 
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',  # аутентификации через токен
+        'rest_framework.authentication.TokenAuthentication',
     ]
 }
 
@@ -74,7 +74,6 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],
-        # 'DIRS': [os.path.join(BASE_DIR, 'templates')],  # задаем директорию для темплайтс
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
