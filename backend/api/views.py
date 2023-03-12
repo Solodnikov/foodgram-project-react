@@ -144,26 +144,3 @@ class DownloadShoppingCartApiView(APIView):
         response = HttpResponse(shopping_list, content_type='text/plain')
         response['Content-Disposition'] = f'attachment; filename={filename}'
         return response
-
-
-
-
-        # response = HttpResponse(content_type='application/pdf')
-        # response['Content-Disposition'] = f'attachment; filename={filename}'
-        # sheet = canvas.Canvas(response,)
-        #                     #   pagesize=A4)
-        # sheet.setTitle('Список покупок')
-        # begin_position_x = 20
-        # begin_position_y = 650
-        # for ingredient in ingredients:
-        #     sheet.drawString(
-        #         begin_position_x,
-        #         begin_position_y,
-        #         text=(f'- {ingredient["ingredient__name"]} '
-        #               f'({ingredient["ingredient__measurement_unit"]})'
-        #               f' - {ingredient["amount"]}')
-        #     )
-        #     begin_position_y -= 30
-        #     sheet.showPage()
-        #     sheet.save()
-        #     return response
