@@ -36,4 +36,3 @@ class RecipeFilter(FilterSet):
     #     if value and not user.is_anonymous:
     #         return queryset.filter(shopping_cart__user=user)
     #     return queryset
-    
