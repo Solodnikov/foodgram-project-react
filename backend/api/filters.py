@@ -1,5 +1,5 @@
 from django_filters.rest_framework import FilterSet, filters
-from recipes.models import Recipe, Tag, Ingredient
+from recipes.models import Ingredient, Recipe, Tag
 
 
 class IngredientFilter(FilterSet):
@@ -36,3 +36,4 @@ class RecipeFilter(FilterSet):
     #     if value and not user.is_anonymous:
     #         return queryset.filter(shopping_cart__user=user)
     #     return queryset
+    

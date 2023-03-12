@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from recipes.models import (Favourite, Ingredient, IngredientsinRecipt, Recipe,
-                            Shopping_list, Tag)
+                            ShoppingList, Tag)
 from rest_framework import permissions, status, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -67,7 +67,7 @@ class ShoppingApiView(APIView):
             'user': request.user.id,
             'recipe': id
         }
-        if not Shopping_list.objects.filter(
+        if not ShoppingList.objects.filter(
            user=request.user, recipe__id=id).exists():
             serializer = ShoppingSerializer(
                 data=data, context={'request': request}
@@ -80,11 +80,11 @@ class ShoppingApiView(APIView):
 
     def delete(self, request, id):
         recipe = get_object_or_404(Recipe, id=id)
-        if Shopping_list.objects.filter(
+        if ShoppingList.objects.filter(
             user=request.user,
             recipe=recipe
         ).exists():
-            Shopping_list.objects.filter(
+            ShoppingList.objects.filter(
                 user=request.user,
                 recipe=recipe
             ).delete()

@@ -182,7 +182,7 @@ class Favourite(models.Model):
             f'{self.user} добавил "{self.recipe}" в Избранные рецепты.')
 
 
-class Shopping_list(models.Model):
+class ShoppingList(models.Model):
     """ Список покупок.
     """
     recipe = models.ForeignKey(

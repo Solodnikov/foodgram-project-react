@@ -1,6 +1,6 @@
 from drf_extra_fields.fields import Base64ImageField
 from recipes.models import (Favourite, Ingredient, IngredientsinRecipt, Recipe,
-                            Shopping_list, Tag, TaginRecipe)
+                            ShoppingList, Tag, TaginRecipe)
 from rest_framework import serializers
 from users.serializers import CustomUserSerializer, ShortRecipeSerialiser
 
@@ -56,7 +56,7 @@ class ShoppingSerializer(serializers.ModelSerializer):
     """
 
     class Meta:
-        model = Shopping_list
+        model = ShoppingList
         fields = ('user', 'recipe')
 
     def to_representation(self, instance):
@@ -101,7 +101,7 @@ class RecipeSerialiser(serializers.ModelSerializer):
 
     def get_is_in_shopping_cart(self, obj):
         request_user = self.context.get('request').user
-        return Shopping_list.objects.filter(
+        return ShoppingList.objects.filter(
             user=request_user.id,
             recipe=obj.id
         ).exists()
@@ -170,7 +170,6 @@ class RecipeCreateSerialiser(serializers.ModelSerializer):
         author = self.context.get('request').user
         recipe = Recipe.objects.create(author=author, **validated_data)
         self.create_ingredients(ingredients, recipe)
-        # recipe.tags.set(tags)
         self.create_tags(tags, recipe)
         return recipe
 
