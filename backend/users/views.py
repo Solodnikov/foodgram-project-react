@@ -3,16 +3,15 @@ from djoser.views import UserViewSet
 from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.pagination import PageNumberPagination
 
 from .models import Subscribe
-from .pagination import CustomUserPagination
+from .pagination import CustomPagination
 from .permissions import CustomUserPermission
 from .serializers import SubscribeSerializer
 
 
 class CustomUserViewSet(UserViewSet):
-    pagination_class = CustomUserPagination
+    pagination_class = CustomPagination
     permission_classes = (CustomUserPermission, )
 
 
@@ -48,29 +47,10 @@ class SubscribeApiView(APIView):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-# class SubscriptionsApiView(APIView):
-#     """ Получение пользователем сведений о своих подписках. """
-
-#     permission_classes = (permissions.IsAuthenticated, )
-#     pagination_class = CustomUserPagination
-
-#     def get(self, request):
-#         user = request.user.id
-#         if not Subscribe.objects.filter(subscriber=user).exists():
-#             return Response(status=status.HTTP_400_BAD_REQUEST)
-#         subscriptions = Subscribe.objects.filter(
-#             subscriber=user)
-#         serializer = SubscribeSerializer(subscriptions,
-#                                          context={'request': request},
-#                                          many=True)
-#         return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-class SubscriptionsApiView(APIView, PageNumberPagination):
+class SubscriptionsApiView(APIView, CustomPagination):
     """ Получение пользователем сведений о своих подписках. """
 
     permission_classes = (permissions.IsAuthenticated, )
-    page_size = 2
 
     def get(self, request):
         user = request.user.id

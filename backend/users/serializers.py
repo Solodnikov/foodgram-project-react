@@ -1,8 +1,8 @@
-from rest_framework import serializers
-from .models import CustomUser, Subscribe
-from recipes.models import Recipe
 from djoser.serializers import UserCreateSerializer, UserSerializer
-# from api.serializers import ShortRecipeSerialiser
+from recipes.models import Recipe
+from rest_framework import serializers
+
+from .models import CustomUser, Subscribe
 
 
 class ShortRecipeSerialiser(serializers.ModelSerializer):
@@ -88,6 +88,9 @@ class ShowSubscribeSerializer(serializers.ModelSerializer):
     def get_recipes(self, obj):
         request = self.context.get('request')
         recipes = Recipe.objects.filter(author=obj)
+        limit = request.query_params.get('recipes_limit')
+        if limit:
+            recipes = recipes[:int(limit)]
         return ShortRecipeSerialiser(
             recipes,
             many=True,
@@ -96,9 +99,3 @@ class ShowSubscribeSerializer(serializers.ModelSerializer):
     def get_recipes_count(self, obj):
         recipes = Recipe.objects.filter(author=obj)
         return recipes.count()
-
-    # def validate(self, data):
-    #     request = self.context.get('request')
-    #     if data['id'] == request.user.id:
-    #         raise serializers.ValidationError(detail='eni')
-    #     return data

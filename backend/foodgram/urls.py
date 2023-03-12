@@ -24,9 +24,7 @@ urlpatterns = [
     path('api/', include('users.urls', namespace='users')),
 ]
 
-
 # Подключение обработки медиафайлов в режиме отладки
-
 if settings.DEBUG:
     urlpatterns += static(
         settings.MEDIA_URL, document_root=settings.MEDIA_ROOT

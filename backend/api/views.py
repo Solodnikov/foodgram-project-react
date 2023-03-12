@@ -1,22 +1,19 @@
 from api.permissions import AuthorAdminAndReadPermission
 from django.db.models import Sum
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from recipes.models import (Favourite, Ingredient, IngredientsinRecipt, Recipe,
                             Shopping_list, Tag)
-from rest_framework import filters, permissions, status, viewsets
+from rest_framework import permissions, status, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .filters import IngredientFilter, RecipeFilter
-from .pagination import RecipePagination
+from .pagination import CustomPagination
 from .serializers import (FavouriteSerializer, IngredientSerializer,
                           RecipeCreateSerialiser, RecipeSerialiser,
                           ShoppingSerializer, TagSerializer)
-from django.http import HttpResponse
-import io
-from django.http import FileResponse
-from reportlab.pdfgen import canvas
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
@@ -101,7 +98,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     """
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerialiser
-    pagination_class = RecipePagination
+    pagination_class = CustomPagination
     permission_classes = (AuthorAdminAndReadPermission, )
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter

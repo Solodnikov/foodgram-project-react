@@ -2,7 +2,7 @@ from drf_extra_fields.fields import Base64ImageField
 from recipes.models import (Favourite, Ingredient, IngredientsinRecipt, Recipe,
                             Shopping_list, Tag, TaginRecipe)
 from rest_framework import serializers
-from users.serializers import CustomUserSerializer
+from users.serializers import CustomUserSerializer, ShortRecipeSerialiser
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -198,30 +198,3 @@ class RecipeCreateSerialiser(serializers.ModelSerializer):
         return RecipeSerialiser(instance, context={
             'request': self.context.get('request')
         }).data
-
-
-# class ShortRecipeSerialiser(serializers.ModelSerializer):
-#     """
-#     Сериалайзер для представления кратких сведений рецепта.
-#     """
-#     class Meta:
-#         model = Recipe
-#         fields = ('id', 'name', 'image', 'cooking_time')
-
-
-
-#       "email"
-#       "id"
-#       "username"
-#       "first_name"
-#       "last_name"
-#       "is_subscribed"
-#       "recipes"
-
-#           "id"
-#           "name"
-#           "image"
-#           "cooking_time"
-
-#     recipes = ShortRecipeSerialiser(many=True, read_only=True, required=False)
-

@@ -1,8 +1,7 @@
 from django.core.validators import MinValueValidator
 from django.db import models
-# from django.conf import settings
-from users.models import CustomUser
 from django.db.models import UniqueConstraint
+from users.models import CustomUser
 
 
 class Recipe(models.Model):

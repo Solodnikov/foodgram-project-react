@@ -1,9 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import AbstractUser
-
-
-# from django.conf import settings
-# Create your models here.
+from django.db import models
 
 
 class CustomUser(AbstractUser):
@@ -12,7 +8,6 @@ class CustomUser(AbstractUser):
         verbose_name='Уникальный юзернейм',
         max_length=150,
         unique=True,
-        # validators=[validate_username]
     )
 
     email = models.EmailField(
@@ -24,13 +19,11 @@ class CustomUser(AbstractUser):
     first_name = models.CharField(
         verbose_name='Имя',
         max_length=150,
-        # validators=[validate_username]
     )
 
     last_name = models.CharField(
         verbose_name='Фамилия',
         max_length=150,
-        # validators=[validate_username]
     )
 
     password = models.CharField(
