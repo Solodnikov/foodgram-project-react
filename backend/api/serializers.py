@@ -200,42 +200,28 @@ class RecipeCreateSerialiser(serializers.ModelSerializer):
         }).data
 
 
-class ShortRecipeSerialiser(serializers.ModelSerializer):
-    """
-    Сериалайзер для представления кратких сведений рецепта.
-    """
-    class Meta:
-        model = Recipe
-        fields = ('id', 'name', 'image', 'cooking_time')
-
-    # class ShowShoppingListSerializer(serializers.ModelSerializer):
-    #     """ Сериалайзер показа списка ингредиентов."""
-
-    #     pass
-
-
-# class ShoppingListSerializer(serializers.ModelSerializer):
+# class ShortRecipeSerialiser(serializers.ModelSerializer):
 #     """
-#     Сериалайзер для создания списка Ингредиентов из Списка покупок.
+#     Сериалайзер для представления кратких сведений рецепта.
 #     """
-#     ingredient = serializers.SerializerMethodField(many=True)
-#     # ingredient_amount = serializers.SerializerMethodField()
-#     # recipe_list = 
-
 #     class Meta:
-#         model = Shopping_list
-#         fields = ('ingredient')
-
-#     def get_ingredient(self, obj):
-#         return 
+#         model = Recipe
+#         fields = ('id', 'name', 'image', 'cooking_time')
 
 
-#         def get_ingredients(self, obj):
-#         ingredients = IngredientsinRecipt.objects.filter(recipe=obj)
-#         return IngredientsinReciptSerializer(ingredients, many=True).data
 
-#     def to_representation(self, instance):
-#         return ShowShoppingListSerializer(instance.recipe,
-#             context={'request': self.context.get('request')}
-#         ).data
-    
+#       "email"
+#       "id"
+#       "username"
+#       "first_name"
+#       "last_name"
+#       "is_subscribed"
+#       "recipes"
+
+#           "id"
+#           "name"
+#           "image"
+#           "cooking_time"
+
+#     recipes = ShortRecipeSerialiser(many=True, read_only=True, required=False)
+
