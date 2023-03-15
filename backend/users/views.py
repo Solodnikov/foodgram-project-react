@@ -5,8 +5,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Subscribe
-from .pagination import CustomPagination
-from .permissions import CustomUserPermission
+from api.pagination import CustomPagination
+from api.permissions import CustomUserPermission
 from .serializers import SubscribeSerializer
 
 

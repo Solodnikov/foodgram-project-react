@@ -14,7 +14,28 @@ class ShortRecipeSerialiser(serializers.ModelSerializer):
         fields = ('id', 'name', 'image', 'cooking_time')
 
 
-class CustomUserSerializer(UserSerializer):
+# class CustomUserSerializer(UserSerializer):
+#     is_subscribed = serializers.SerializerMethodField()
+
+#     class Meta:
+#         model = CustomUser
+#         fields = (
+#             'email', 'id', 'username', 'first_name', 'last_name',
+#             'is_subscribed')
+
+#     def get_is_subscribed(self, obj):
+#         request_user = self.context.get('request').user
+#         if request_user.is_anonymous:
+#             return False
+#         return Subscribe.objects.filter(
+#             subscriber=request_user,
+#             subscribing=obj
+#         ).exists()
+    
+
+class CustomUserSerializer(serializers.ModelSerializer):
+    """ Сериалайзер для предоставлении сведений о пользователе. """
+
     is_subscribed = serializers.SerializerMethodField()
 
     class Meta:
@@ -27,10 +48,7 @@ class CustomUserSerializer(UserSerializer):
         request_user = self.context.get('request').user
         if request_user.is_anonymous:
             return False
-        return Subscribe.objects.filter(
-            subscriber=request_user,
-            subscribing=obj
-        ).exists()
+        return request_user.subscriber.filter(subscribing=obj).exists()
 
 
 class UserCreateSerializer(UserCreateSerializer):
@@ -80,10 +98,7 @@ class ShowSubscribeSerializer(serializers.ModelSerializer):
         request_user = self.context.get('request').user
         if request_user.is_anonymous:
             return False
-        return Subscribe.objects.filter(
-            subscriber=request_user,
-            subscribing=obj
-        ).exists()
+        return request_user.subscriber.filter(subscribing=obj).exists()
 
     def get_recipes(self, obj):
         request = self.context.get('request')

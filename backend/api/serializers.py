@@ -146,14 +146,24 @@ class RecipeCreateSerialiser(serializers.ModelSerializer):
             'cooking_time'
         )
 
-    def create_ingredients(self, ingredients, recipe):
-        for i in ingredients:
-            ingredient = Ingredient.objects.get(id=i['id'])
-            IngredientsinRecipt.objects.create(
-                ingredient=ingredient,
+    # def create_ingredients(self, ingredients, recipe):
+    #     for i in ingredients:
+    #         ingredient = Ingredient.objects.get(id=i['id'])
+    #         IngredientsinRecipt.objects.create(
+    #             ingredient=ingredient,
+    #             recipe=recipe,
+    #             amount=i['amount'],
+    #         )
+
+    # NEW
+    def create_ingredients_amounts(self, ingredients, recipe):
+        IngredientsinRecipt.objects.bulk_create(
+            [IngredientsinRecipt(
+                ingredient=Ingredient.objects.get(id=ingredient['id']),
                 recipe=recipe,
-                amount=i['amount'],
-            )
+                amount=ingredient['amount']
+            ) for ingredient in ingredients]
+        )
 
     def create_tags(self, tags, recipe):
         for tag in tags:
