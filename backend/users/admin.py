@@ -1,9 +1,9 @@
 from django.contrib import admin
 
-from .models import CustomUser, Subscribe
+from .models import User, Subscribe
 
 
-class CustomUserAdmin(admin.ModelAdmin):
+class UserAdmin(admin.ModelAdmin):
     empty_value_display = 'отсутствует'
     list_display = ('username', 'first_name', 'last_name', 'email')
     ordering = ['username']
@@ -17,5 +17,5 @@ class SucscribeAdmin(admin.ModelAdmin):
     search_fields = ['subscribing', 'subscriber']
 
 
-admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(User, UserAdmin)
 admin.site.register(Subscribe, SucscribeAdmin)

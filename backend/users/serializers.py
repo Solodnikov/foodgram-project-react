@@ -1,8 +1,9 @@
-from djoser.serializers import UserCreateSerializer, UserSerializer
+from djoser.serializers import UserCreateSerializer
+# UserSerializer
 from recipes.models import Recipe
 from rest_framework import serializers
 
-from .models import CustomUser, Subscribe
+from .models import User, Subscribe
 
 
 class ShortRecipeSerialiser(serializers.ModelSerializer):
@@ -39,7 +40,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
     is_subscribed = serializers.SerializerMethodField()
 
     class Meta:
-        model = CustomUser
+        model = User
         fields = (
             'email', 'id', 'username', 'first_name', 'last_name',
             'is_subscribed')
@@ -55,7 +56,7 @@ class UserCreateSerializer(UserCreateSerializer):
     """ Сериализатор создания пользователя """
 
     class Meta:
-        model = CustomUser
+        model = User
         fields = (
             'email', 'username', 'first_name',
             'last_name', 'password')
@@ -82,7 +83,7 @@ class ShowSubscribeSerializer(serializers.ModelSerializer):
     recipes_count = serializers.SerializerMethodField()
 
     class Meta:
-        model = CustomUser
+        model = User
         fields = (
             'email',
             'id',

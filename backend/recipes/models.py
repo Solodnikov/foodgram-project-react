@@ -1,7 +1,7 @@
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
 from django.db.models import UniqueConstraint
-from users.models import CustomUser
+from users.models import User
 
 
 class Recipe(models.Model):
@@ -9,10 +9,16 @@ class Recipe(models.Model):
     name = models.CharField(
         max_length=200,
         unique=True,
-        verbose_name='Название'
+        verbose_name='Название',
+        validators=[
+            RegexValidator(
+                regex=r'/\W+/g',
+                message='Ввод символов, не являющихся буквами, не допустимо',
+            )
+        ]
     )
     author = models.ForeignKey(
-        CustomUser,
+        User,
         related_name='recipes',
         on_delete=models.CASCADE,
         verbose_name='Автор публикации',
@@ -21,7 +27,7 @@ class Recipe(models.Model):
         max_length=250,
         verbose_name='Текстовое описание'
     )
-    cooking_time = models.PositiveIntegerField(
+    cooking_time = models.PositiveSmallIntegerField(
         verbose_name='Время приготовления в минутах',
         validators=[
             MinValueValidator(1, 'Значение не может быть меньше 1')
@@ -118,6 +124,12 @@ class Tag(models.Model):
         max_length=7,
         verbose_name='Цветовой HEX-код',
         unique=True,
+        validators=[
+            RegexValidator(
+                regex=r'^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$',
+                message='Cимволы не соответствуют цветовому HEX-коду',
+            )
+        ]
 
     )
     slug = models.SlugField(
@@ -134,6 +146,8 @@ class Tag(models.Model):
         return self.name
 
 
+# необходимо исключить модель
+# каскадные ошибки при удалении модели
 class TaginRecipe(models.Model):
     """ Модель связи тега и рецепта. """
 
@@ -167,7 +181,7 @@ class Favourite(models.Model):
         verbose_name='Рецепт',
     )
     user = models.ForeignKey(
-        CustomUser,
+        User,
         on_delete=models.CASCADE,
         related_name='favourites',
         verbose_name='Пользователь',
@@ -192,7 +206,7 @@ class ShoppingList(models.Model):
         verbose_name='Рецепт',
     )
     user = models.ForeignKey(
-        CustomUser,
+        User,
         on_delete=models.CASCADE,
         related_name='shopping_list',
         verbose_name='Пользователь',
