@@ -1,34 +1,42 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.core.validators import RegexValidator
+from django.conf import settings
 
 
 class User(AbstractUser):
 
     username = models.CharField(
         verbose_name='Уникальный юзернейм',
-        max_length=150,
+        max_length=settings.USERNAME_MAX_LEN,
         unique=True,
+        validators=[
+            RegexValidator(
+                regex=r'[\w.@+-_]+',
+                message='Допустим ввод букв и символов из числа ".@+-_"'
+            ),
+        ]
     )
 
     email = models.EmailField(
         'Почта',
         unique=True,
-        max_length=254
+        max_length=settings.EMAIL_MAX_LEN,
     )
 
     first_name = models.CharField(
         verbose_name='Имя',
-        max_length=150,
+        max_length=settings.FIRST_NAME_MAX_LEN,
     )
 
     last_name = models.CharField(
         verbose_name='Фамилия',
-        max_length=150,
+        max_length=settings.LAST_NAME_MAX_LEN,
     )
 
     password = models.CharField(
         'Пароль',
-        max_length=150,
+        max_length=settings.PASSWORD_MAX_LEN,
         blank=True,
         null=True,
     )
@@ -37,10 +45,6 @@ class User(AbstractUser):
     USERNAME_FIELD = 'email'
 
     class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=['username', 'email'], name='unique_user'),
-        ]
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
 
