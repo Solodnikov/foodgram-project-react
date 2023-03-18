@@ -15,7 +15,8 @@ from recipes.models import (Favourite, Ingredient, IngredientsinRecipt, Recipe,
 from rest_framework import permissions, status, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from users.models import Subscribe
+from users.models import Subscribe, User
+from rest_framework.decorators import action
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
@@ -194,3 +195,24 @@ class SubscriptionsApiView(APIView, CustomPagination):
                                          context={'request': request},
                                          many=True)
         return self.get_paginated_response(serializer.data)
+
+
+# class SubscriptionsViewSet(SubscriptionsApiView,
+#                            SubscribeApiView,
+#                            viewsets.GenericViewSet):
+#     """ Вьюсет для получение пользователем сведений о своих подписках.
+#     Добавление/удаление подписки на автора. """
+
+
+#     @action(methods=['get'], detail=False, url_path='subscriptions/'
+#             )
+#     def subscriptions(self, request):
+#         return self.get(request)
+
+#     @action(methods=['post'], detail=True,)
+#     def post_action(self, request, id):
+#         return self.post(self, request, id)
+
+#     @action(methods=['delete'], detail=True,)
+#     def delete_action(self, request, id):
+#         return self.delete(self, request, id)
