@@ -4,10 +4,10 @@ from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Subscribe
+from users.models import Subscribe
 from api.pagination import CustomPagination
 from api.permissions import CustomUserPermission
-from .serializers import SubscribeSerializer
+from api.serializers import SubscribeSerializer
 
 
 class CustomUserViewSet(UserViewSet):

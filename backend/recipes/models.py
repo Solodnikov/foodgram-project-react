@@ -12,7 +12,7 @@ class Recipe(models.Model):
         verbose_name='Название',
         validators=[
             RegexValidator(
-                regex=r'/\W+/g',
+                regex=r'^[a-zA-Zа-яА-Я ]+$',
                 message='Ввод символов, не являющихся буквами, не допустимо',
             )
         ]

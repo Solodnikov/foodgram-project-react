@@ -72,6 +72,10 @@ class Subscribe(models.Model):
                 fields=['subscriber', 'subscribing'],
                 name='unique_subscribe'
             ),
+            models.CheckConstraint(
+                name="%(app_label)s_%(class)s_prevent_self_subscribe",
+                check=~models.Q(subscriber=models.F("subscribing")),
+            ),
         ]
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
