@@ -159,8 +159,7 @@ class SubscribeApiView(APIView):
             'subscriber': request.user.id,
             'subscribing': id
         }
-        if not Subscribe.objects.filter(subscriber=request.user.id,
-                                        subscribing=id).exists():
+        if not request.user.subscriber.filter(subscribing=id).exists():
             serializer = SubscribeSerializer(data=data,
                                              context={'request': request})
             if serializer.is_valid():
@@ -171,12 +170,9 @@ class SubscribeApiView(APIView):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, id):
-        user = request.user.id
-        subscribing = id
-        if Subscribe.objects.filter(subscriber=user,
-                                    subscribing=subscribing).exists():
+        if request.user.subscriber.filter(subscribing=id).exists():
             subscription = get_object_or_404(
-                Subscribe, subscriber=user, subscribing=subscribing)
+                Subscribe, subscriber=request.user.id, subscribing=id)
             subscription.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(status=status.HTTP_400_BAD_REQUEST)
