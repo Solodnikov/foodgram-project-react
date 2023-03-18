@@ -1,10 +1,8 @@
+from api.views import (DownloadShoppingCartApiView, FavouriteApiView,
+                       IngredientViewSet, RecipeViewSet, ShoppingApiView,
+                       SubscribeApiView, SubscriptionsApiView, TagViewSet)
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
-from users.views import SubscribeApiView, SubscriptionsApiView
-
-from .views import (DownloadShoppingCartApiView, FavouriteApiView,
-                    IngredientViewSet, RecipeViewSet, ShoppingApiView,
-                    TagViewSet)
 
 app_name = 'api'
 
