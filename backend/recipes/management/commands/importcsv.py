@@ -22,22 +22,23 @@ class Command(BaseCommand):
         load_count = 0
         for row in csv_reader:
             number += 1
+            name_value, measurement_unit_value = row
             if Ingredient.objects.filter(
-                name=row[0],
-                measurement_unit=row[1]
+                name=name_value,
+                measurement_unit=measurement_unit_value
             ).exists():
-                print(f'{number}) Ингредиент "{row[0].capitalize()}" '
-                      f'с мерой измерения "{row[1]}" '
+                print(f'{number}) Ингредиент "{name_value.capitalize()}" '
+                      f'с мерой измерения "{measurement_unit_value}" '
                       f'уже имеется в базе данных.')
                 continue
             else:
                 Ingredient.objects.get_or_create(
-                    name=row[0],
-                    measurement_unit=row[1]
+                    name=name_value,
+                    measurement_unit=measurement_unit_value
                 )
                 load_count += 1
-                print(f'{number}) Ингредиент "{row[0].capitalize()}" '
-                      f'с мерой измерения "{row[1]}" '
+                print(f'{number}) Ингредиент "{name_value.capitalize()}" '
+                      f'с мерой измерения "{measurement_unit_value}" '
                       f'помещен в базу данных.')
 
         ingredients_count = Ingredient.objects.all().count()
