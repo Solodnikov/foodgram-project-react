@@ -1,12 +1,15 @@
 from django.contrib import admin
 
-from .models import (Favourite, Ingredient, IngredientsinRecipt, Recipe,
+from .models import (Favourite, Ingredient,
+                     AmountOfIngredient,
+                    #  IngredientsinRecipt,
+                     Recipe,
                      ShoppingList, Tag)
 
 
-class IngredientsinReciptInline(admin.TabularInline):
-    model = IngredientsinRecipt
-    extra = 1
+# class AmountOfIngredientInline(admin.TabularInline):
+#     model = AmountOfIngredient
+#     extra = 1
 
 
 class RecipeAdmin(admin.ModelAdmin):
@@ -14,7 +17,7 @@ class RecipeAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'author', 'cooking_time',)
     ordering = ['name']
     search_fields = ['name', ]
-    inlines = [IngredientsinReciptInline]
+    # inlines = [AmountOfIngredientInline]
 
 
 class IngredientAdmin(admin.ModelAdmin):
@@ -36,3 +39,4 @@ admin.site.register(Ingredient, IngredientAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Favourite)
 admin.site.register(ShoppingList)
+admin.site.register(AmountOfIngredient)

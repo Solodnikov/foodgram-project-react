@@ -2,7 +2,7 @@ from django.core.exceptions import ValidationError
 
 
 def validate_username(value):
-    """ Валидатор для username. 
+    """ Валидатор для username.
     Не допускает использование имени пользователя <me>.
     """
     if value == 'me':

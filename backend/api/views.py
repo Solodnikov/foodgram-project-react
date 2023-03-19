@@ -10,7 +10,10 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
-from recipes.models import (Favourite, Ingredient, IngredientsinRecipt, Recipe,
+from recipes.models import (Favourite, Ingredient, 
+                            IngredientsinRecipt,
+                            AmountOfIngredient,
+                            Recipe,
                             ShoppingList, Tag)
 from rest_framework import permissions, status, viewsets
 from rest_framework.response import Response
@@ -125,8 +128,15 @@ class DownloadShoppingCartApiView(APIView):
     def get(self, request):
         request_user = request.user
 
-        ingredients = IngredientsinRecipt.objects.filter(
-            recipe__shopping_list__user=request_user).values(
+        # ingredients = IngredientsinRecipt.objects.filter(
+        #     recipe__shopping_list__user=request_user).values(
+        #     'ingredient__name',
+        #     'ingredient__measurement_unit'
+        # ).annotate(amount=Sum('amount'))
+
+# КОРРЕКТИРОВКА С УЧЕТОМ ИЗМЕНЕНИЯ МОДЕЛИ
+        ingredients = AmountOfIngredient.objects.filter(
+            recipes__shopping_list__user=request_user).values(
             'ingredient__name',
             'ingredient__measurement_unit'
         ).annotate(amount=Sum('amount'))

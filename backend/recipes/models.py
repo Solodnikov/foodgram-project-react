@@ -33,11 +33,16 @@ class Recipe(models.Model):
             MinValueValidator(1, 'Значение не может быть меньше 1')
         ]
     )
+    # ingredients = models.ManyToManyField(
+    #     'Ingredient',
+    #     related_name='recipes',
+    #     through='IngredientsinRecipt',
+    #     verbose_name='Ингредиент',
+    # )
     ingredients = models.ManyToManyField(
-        'Ingredient',
+        'AmountOfIngredient',
         related_name='recipes',
-        through='IngredientsinRecipt',
-        verbose_name='Ингредиент',
+        verbose_name='Ингредиенты',
     )
     tags = models.ManyToManyField(
         'Tag',
@@ -92,16 +97,29 @@ class IngredientsinRecipt(models.Model):
     """ Промежуточная модель для связи инридиентов с рецептом.
     Добавляет поле количество для ингридиента.
     """
+    pass
+#     ingredient = models.ForeignKey(
+#         Ingredient,
+#         on_delete=models.CASCADE,
+#         verbose_name='Ингридиент',
+#         related_name='ingredient',
+#     )
+#     recipe = models.ForeignKey(
+#         Recipe,
+#         on_delete=models.CASCADE,
+#         related_name='ingredient_list',
+#     )
+
+
+class AmountOfIngredient(models.Model):
+    """ Модель количества ингредиентов. 
+    Связана с моделью рецептов.
+    """
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
         verbose_name='Ингридиент',
-        related_name='ingredient',
-    )
-    recipe = models.ForeignKey(
-        Recipe,
-        on_delete=models.CASCADE,
-        related_name='ingredient_list',
+        related_name='amount_of_ingredient',
     )
     amount = models.PositiveIntegerField(
         verbose_name='Количество',
@@ -109,6 +127,22 @@ class IngredientsinRecipt(models.Model):
             MinValueValidator(1, 'Значение не может быть меньше 1')
         ]
     )
+
+    class Meta:
+        verbose_name = 'Количество ингредиента'
+        verbose_name_plural = 'Количество ингредиентов'
+        constraints = (
+            UniqueConstraint(
+                fields=('ingredient', 'amount',),
+                name='unique_ingredient_amount',
+            ),
+        )
+
+    def __str__(self):
+        return (
+            f'{self.ingredient.name} - {self.amount}'
+            f' ({self.ingredient.measurement_unit})'
+        )
 
 
 class Tag(models.Model):

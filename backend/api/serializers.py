@@ -1,7 +1,7 @@
 from djoser.serializers import UserCreateSerializer
 from drf_extra_fields.fields import Base64ImageField
 from recipes.models import (Favourite, Ingredient, IngredientsinRecipt, Recipe,
-                            ShoppingList, Tag)
+                            ShoppingList, Tag, AmountOfIngredient)
 from rest_framework import serializers
 from users.models import Subscribe, User
 
@@ -89,6 +89,22 @@ class TagSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'color', 'slug')
 
 
+# class IngredientsinReciptSerializer(serializers.ModelSerializer):
+#     """
+#     Сериалайзер для представления сведений об игредиентах в рецепте.
+#     """
+#     id = serializers.ReadOnlyField(source='ingredient.id')
+#     name = serializers.ReadOnlyField(source='ingredient.name')
+#     measurement_unit = serializers.ReadOnlyField(
+#         source='ingredient.measurement_unit'
+#     )
+
+#     class Meta:
+#         model = IngredientsinRecipt
+#         fields = ('id', 'name', 'amount', 'measurement_unit')
+
+
+# ОБНОВЛЕННЫЙ СЕРИАЛАЙЗЕР
 class IngredientsinReciptSerializer(serializers.ModelSerializer):
     """
     Сериалайзер для представления сведений об игредиентах в рецепте.
@@ -100,7 +116,7 @@ class IngredientsinReciptSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        model = IngredientsinRecipt
+        model = AmountOfIngredient
         fields = ('id', 'name', 'amount', 'measurement_unit')
 
 
@@ -183,8 +199,13 @@ class RecipeSerialiser(serializers.ModelSerializer):
             recipe=obj.id
         ).exists()
 
+    # def get_ingredients(self, obj):
+    #     ingredients = IngredientsinRecipt.objects.filter(recipe=obj)
+    #     return IngredientsinReciptSerializer(ingredients, many=True).data
+
+# оффигеть даже работает
     def get_ingredients(self, obj):
-        ingredients = IngredientsinRecipt.objects.filter(recipe=obj)
+        ingredients = AmountOfIngredient.objects.filter(recipes=obj)
         return IngredientsinReciptSerializer(ingredients, many=True).data
 
 
