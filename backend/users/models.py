@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.core.validators import RegexValidator
 from django.conf import settings
+from users.validators import validate_username
 
 
 class User(AbstractUser):
@@ -12,9 +13,10 @@ class User(AbstractUser):
         unique=True,
         validators=[
             RegexValidator(
-                regex=r'[\w.@+-_]+',
+                regex=r'[\w.@+_-]+',
                 message='Допустим ввод букв и символов из числа ".@+-_"'
             ),
+            validate_username
         ]
     )
 
