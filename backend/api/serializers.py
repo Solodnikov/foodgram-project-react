@@ -1,7 +1,7 @@
 from djoser.serializers import UserCreateSerializer
 from drf_extra_fields.fields import Base64ImageField
 from recipes.models import (Favourite, Ingredient, IngredientsinRecipt, Recipe,
-                            ShoppingList, Tag, TaginRecipe)
+                            ShoppingList, Tag)
 from rest_framework import serializers
 from users.models import Subscribe, User
 
@@ -209,6 +209,7 @@ class RecipeCreateSerialiser(serializers.ModelSerializer):
         queryset=Tag.objects.all(), many=True
     )
     image = Base64ImageField()
+    cooking_time = serializers.IntegerField()
 
     class Meta:
         model = Recipe
@@ -223,16 +224,6 @@ class RecipeCreateSerialiser(serializers.ModelSerializer):
             'cooking_time'
         )
 
-    # def create_ingredients(self, ingredients, recipe):
-    #     for i in ingredients:
-    #         ingredient = Ingredient.objects.get(id=i['id'])
-    #         IngredientsinRecipt.objects.create(
-    #             ingredient=ingredient,
-    #             recipe=recipe,
-    #             amount=i['amount'],
-    #         )
-
-    # NEW
     def create_ingredients_amounts(self, ingredients, recipe):
         IngredientsinRecipt.objects.bulk_create(
             [IngredientsinRecipt(
@@ -241,10 +232,6 @@ class RecipeCreateSerialiser(serializers.ModelSerializer):
                 amount=ingredient['amount']
             ) for ingredient in ingredients]
         )
-
-    def create_tags(self, tags, recipe):
-        for tag in tags:
-            TaginRecipe.objects.create(recipe=recipe, tag=tag)
 
     def create(self, validated_data):
         """
@@ -256,8 +243,8 @@ class RecipeCreateSerialiser(serializers.ModelSerializer):
         tags = validated_data.pop('tags')
         author = self.context.get('request').user
         recipe = Recipe.objects.create(author=author, **validated_data)
-        self.create_ingredients(ingredients, recipe)
-        self.create_tags(tags, recipe)
+        self.create_ingredients_amounts(ingredients, recipe)
+        recipe.tags.set(tags)
         return recipe
 
     def update(self, instance, validated_data):
@@ -265,13 +252,11 @@ class RecipeCreateSerialiser(serializers.ModelSerializer):
         Изменение рецепта.
         Доступно только автору.
         """
-
-        TaginRecipe.objects.filter(recipe=instance).delete()
-        IngredientsinRecipt.objects.filter(recipe=instance).delete()
         ingredients = validated_data.pop('ingredients')
         tags = validated_data.pop('tags')
-        self.create_ingredients(ingredients, instance)
-        self.create_tags(tags, instance)
+        IngredientsinRecipt.objects.filter(recipe=instance).delete()
+        self.create_ingredients_amounts(ingredients, instance)
+        instance.tags.set(tags)
         instance.name = validated_data.pop('name')
         instance.text = validated_data.pop('text')
         if validated_data.get('image'):

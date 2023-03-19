@@ -12,7 +12,7 @@ class Recipe(models.Model):
         verbose_name='Название',
         validators=[
             RegexValidator(
-                regex=r'^[a-zA-Zа-яА-Я ]+$',
+                regex=r'^[a-zA-Zа-яА-Я- ]+$',
                 message='Ввод символов, не являющихся буквами, не допустимо',
             )
         ]
@@ -41,8 +41,7 @@ class Recipe(models.Model):
     )
     tags = models.ManyToManyField(
         'Tag',
-        related_name='tags',
-        through='TaginRecipe',
+        related_name='recipes',
         verbose_name='Тэг',
     )
     image = models.ImageField(
@@ -148,27 +147,28 @@ class Tag(models.Model):
 
 # необходимо исключить модель
 # каскадные ошибки при удалении модели
-class TaginRecipe(models.Model):
-    """ Модель связи тега и рецепта. """
 
-    recipe = models.ForeignKey(
-        Recipe,
-        on_delete=models.CASCADE,
-        verbose_name='Рецепт'
-    )
-    tag = models.ForeignKey(
-        Tag,
-        on_delete=models.CASCADE,
-        verbose_name='Тег'
-    )
+# class TaginRecipe(models.Model):
+#     """ Модель связи тега и рецепта. """
 
-    class Meta:
-        constraints = [
-            UniqueConstraint(
-                fields=['recipe', 'tag'],
-                name='recipe_tag_unique'
-            )
-        ]
+#     recipe = models.ForeignKey(
+#         Recipe,
+#         on_delete=models.CASCADE,
+#         verbose_name='Рецепт'
+#     )
+#     tag = models.ForeignKey(
+#         Tag,
+#         on_delete=models.CASCADE,
+#         verbose_name='Тег'
+#     )
+
+#     class Meta:
+#         constraints = [
+#             UniqueConstraint(
+#                 fields=['recipe', 'tag'],
+#                 name='recipe_tag_unique'
+#             )
+#         ]
 
 
 class Favourite(models.Model):
