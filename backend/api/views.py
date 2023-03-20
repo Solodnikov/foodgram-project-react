@@ -127,14 +127,6 @@ class DownloadShoppingCartApiView(APIView):
 
     def get(self, request):
         request_user = request.user
-
-        # ingredients = IngredientsinRecipt.objects.filter(
-        #     recipe__shopping_list__user=request_user).values(
-        #     'ingredient__name',
-        #     'ingredient__measurement_unit'
-        # ).annotate(amount=Sum('amount'))
-
-# КОРРЕКТИРОВКА С УЧЕТОМ ИЗМЕНЕНИЯ МОДЕЛИ
         ingredients = AmountOfIngredient.objects.filter(
             recipes__shopping_list__user=request_user).values(
             'ingredient__name',
@@ -157,72 +149,56 @@ class DownloadShoppingCartApiView(APIView):
 
 
 class CustomUserViewSet(UserViewSet):
+    """ Получение пользователем сведений о своих подписках.
+    Добавление/удаление подписки на автора.
+    """
     pagination_class = CustomPagination
     permission_classes = (CustomUserPermission, )
 
-
-class SubscribeApiView(APIView):
-    """ Добавление/удаление подписки на автора. """
-    permission_classes = (permissions.IsAuthenticated, )
-
-    def post(self, request, id):
-        data = {
-            'subscriber': request.user.id,
-            'subscribing': id
-        }
-        if not request.user.subscriber.filter(subscribing=id).exists():
-            serializer = SubscribeSerializer(data=data,
-                                             context={'request': request})
-            if serializer.is_valid():
-                serializer.save()
-                return Response(
-                    serializer.data, status=status.HTTP_201_CREATED)
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, id):
-        if request.user.subscriber.filter(subscribing=id).exists():
-            subscription = get_object_or_404(
-                Subscribe, subscriber=request.user.id, subscribing=id)
-            subscription.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
-
-
-class SubscriptionsApiView(APIView, CustomPagination):
-    """ Получение пользователем сведений о своих подписках. """
-
-    permission_classes = (permissions.IsAuthenticated, )
-
-    def get(self, request):
-        user = request.user.id
-        if not Subscribe.objects.filter(subscriber=user).exists():
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        subscriptions = Subscribe.objects.filter(
-            subscriber=user)
-        results = self.paginate_queryset(subscriptions, request, view=self)
-        serializer = SubscribeSerializer(results,
-                                         context={'request': request},
-                                         many=True)
+    @action(
+        methods=['GET'],
+        detail=False,
+        permission_classes=(permissions.IsAuthenticated, )
+    )
+    def subscriptions(self, request):
+        request_user = request.user
+        queryset = Subscribe.objects.filter(subscriber=request_user)
+        page = self.paginate_queryset(queryset)
+        serializer = SubscribeSerializer(
+            page, many=True, context={'request': request}
+        )
         return self.get_paginated_response(serializer.data)
 
+    @action(
+        methods=['POST', 'DELETE'],
+        detail=True,
+        permission_classes=(permissions.IsAuthenticated, )
+    )
+    def subscribe(self, request, id):
+        if request.method == 'POST':
+            data = {
+                'subscriber': request.user.id,
+                'subscribing': id
+            }
+            if not request.user.subscriber.filter(subscribing=id).exists():
+                serializer = SubscribeSerializer(data=data,
+                                                 context={'request': request})
+                if serializer.is_valid():
+                    serializer.save()
+                    return Response(
+                        serializer.data,
+                        status=status.HTTP_201_CREATED
+                    )
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
-# class SubscriptionsViewSet(SubscriptionsApiView,
-#                            SubscribeApiView,
-#                            viewsets.GenericViewSet):
-#     """ Вьюсет для получение пользователем сведений о своих подписках.
-#     Добавление/удаление подписки на автора. """
-
-
-#     @action(methods=['get'], detail=False, url_path='subscriptions/'
-#             )
-#     def subscriptions(self, request):
-#         return self.get(request)
-
-#     @action(methods=['post'], detail=True,)
-#     def post_action(self, request, id):
-#         return self.post(self, request, id)
-
-#     @action(methods=['delete'], detail=True,)
-#     def delete_action(self, request, id):
-#         return self.delete(self, request, id)
+        elif request.method == 'DELETE':
+            if request.user.subscriber.filter(subscribing=id).exists():
+                subscription = get_object_or_404(
+                    Subscribe,
+                    subscriber=request.user.id,
+                    subscribing=id
+                )
+                subscription.delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response(status=status.HTTP_400_BAD_REQUEST)

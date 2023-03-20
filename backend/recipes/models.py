@@ -33,12 +33,6 @@ class Recipe(models.Model):
             MinValueValidator(1, 'Значение не может быть меньше 1')
         ]
     )
-    # ingredients = models.ManyToManyField(
-    #     'Ingredient',
-    #     related_name='recipes',
-    #     through='IngredientsinRecipt',
-    #     verbose_name='Ингредиент',
-    # )
     ingredients = models.ManyToManyField(
         'AmountOfIngredient',
         related_name='recipes',
@@ -93,26 +87,8 @@ class Ingredient(models.Model):
             f'"{self.name}" c мерой измерения "{self.measurement_unit}".')
 
 
-class IngredientsinRecipt(models.Model):
-    """ Промежуточная модель для связи инридиентов с рецептом.
-    Добавляет поле количество для ингридиента.
-    """
-    pass
-#     ingredient = models.ForeignKey(
-#         Ingredient,
-#         on_delete=models.CASCADE,
-#         verbose_name='Ингридиент',
-#         related_name='ingredient',
-#     )
-#     recipe = models.ForeignKey(
-#         Recipe,
-#         on_delete=models.CASCADE,
-#         related_name='ingredient_list',
-#     )
-
-
 class AmountOfIngredient(models.Model):
-    """ Модель количества ингредиентов. 
+    """ Модель количества ингредиентов.
     Связана с моделью рецептов.
     """
     ingredient = models.ForeignKey(
