@@ -1,6 +1,8 @@
 from djoser.serializers import UserCreateSerializer
 from drf_extra_fields.fields import Base64ImageField
-from recipes.models import (Favourite, Ingredient, IngredientsinRecipt, Recipe,
+from recipes.models import (Favourite, Ingredient,
+                            # IngredientsinRecipt,
+                            Recipe,
                             ShoppingList, Tag, AmountOfIngredient)
 from rest_framework import serializers
 from users.models import Subscribe, User
@@ -255,9 +257,14 @@ class RecipeCreateSerialiser(serializers.ModelSerializer):
             validated_data.pop('ingredients'), validated_data.pop('tags')
         )
         for ingredient in ingredients:
-            amount_of_ingredient, _ = AmountOfIngredient.objects.get_or_create(
-                ingredient=get_object_or_404(Ingredient, pk=ingredient['id']),
-                amount=ingredient['amount'],
+            amount_of_ingredient, flag = (
+                AmountOfIngredient.objects.get_or_create(
+                    ingredient=get_object_or_404(
+                        Ingredient,
+                        pk=ingredient['id']
+                    ),
+                    amount=ingredient['amount'],
+                )
             )
             instance.ingredients.add(amount_of_ingredient)
         for tag in tags:
