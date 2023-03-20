@@ -14,9 +14,6 @@ router.register('recipes', RecipeViewSet)
 urlpatterns = [
     path('recipes/download_shopping_cart/',
          DownloadShoppingCartApiView.as_view()),
-    # path('', include(router.urls)),
-    # path('recipes/download_shopping_cart/',
-    #      DownloadShoppingCartApiView.as_view()),
     path('recipes/<int:id>/favorite/', FavouriteApiView.as_view()),
     path('recipes/<int:id>/shopping_cart/', ShoppingApiView.as_view()),
     path('', include(router.urls)),
