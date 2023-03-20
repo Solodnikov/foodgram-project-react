@@ -4,6 +4,7 @@ from recipes.models import (Favourite, Ingredient, IngredientsinRecipt, Recipe,
                             ShoppingList, Tag, AmountOfIngredient)
 from rest_framework import serializers
 from users.models import Subscribe, User
+from django.shortcuts import get_object_or_404
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
@@ -215,8 +216,12 @@ class AddIngredientRecipeSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField()
     amount = serializers.IntegerField()
 
+    # class Meta:
+    #     model = IngredientsinRecipt
+    #     fields = ('id', 'amount')
+
     class Meta:
-        model = IngredientsinRecipt
+        model = AmountOfIngredient
         fields = ('id', 'amount')
 
 
@@ -245,46 +250,83 @@ class RecipeCreateSerialiser(serializers.ModelSerializer):
             'cooking_time'
         )
 
-    def create_ingredients_amounts(self, ingredients, recipe):
-        IngredientsinRecipt.objects.bulk_create(
-            [IngredientsinRecipt(
-                ingredient=Ingredient.objects.get(id=ingredient['id']),
-                recipe=recipe,
-                amount=ingredient['amount']
-            ) for ingredient in ingredients]
+    def create_ingredients_and_tags(self, instance, validated_data):
+        ingredients, tags = (
+            validated_data.pop('ingredients'), validated_data.pop('tags')
         )
+        for ingredient in ingredients:
+            amount_of_ingredient, _ = AmountOfIngredient.objects.get_or_create(
+                ingredient=get_object_or_404(Ingredient, pk=ingredient['id']),
+                amount=ingredient['amount'],
+            )
+            instance.ingredients.add(amount_of_ingredient)
+        for tag in tags:
+            instance.tags.add(tag)
+        return instance
 
     def create(self, validated_data):
-        """
-        Создание рецепта.
-        Доступно только авторизированному пользователю.
-        """
-
-        ingredients = validated_data.pop('ingredients')
-        tags = validated_data.pop('tags')
+        saved = {}
+        saved['ingredients'] = validated_data.pop('ingredients')
+        saved['tags'] = validated_data.pop('tags')
         author = self.context.get('request').user
         recipe = Recipe.objects.create(author=author, **validated_data)
-        self.create_ingredients_amounts(ingredients, recipe)
-        recipe.tags.set(tags)
-        return recipe
+        return self.create_ingredients_and_tags(recipe, saved)
 
     def update(self, instance, validated_data):
-        """
-        Изменение рецепта.
-        Доступно только автору.
-        """
-        ingredients = validated_data.pop('ingredients')
-        tags = validated_data.pop('tags')
-        IngredientsinRecipt.objects.filter(recipe=instance).delete()
-        self.create_ingredients_amounts(ingredients, instance)
-        instance.tags.set(tags)
-        instance.name = validated_data.pop('name')
-        instance.text = validated_data.pop('text')
-        if validated_data.get('image'):
-            instance.image = validated_data.pop('image')
-        instance.cooking_time = validated_data.pop('cooking_time')
-        instance.save()
-        return instance
+        instance.ingredients.clear()
+        instance.tags.clear()
+        instance = self.create_ingredients_and_tags(instance, validated_data)
+        return super().update(instance, validated_data)
+
+    # СТАРАЯ ВЕРСИЯ
+    # def create_ingredients_amounts(self, ingredients, recipe):
+        # IngredientsinRecipt.objects.bulk_create(
+        #     [IngredientsinRecipt(
+        #         ingredient=Ingredient.objects.get(id=ingredient['id']),
+        #         recipe=recipe,
+        #         amount=ingredient['amount']
+        #     ) for ingredient in ingredients]
+        # )
+
+    # def create_ingredients_amounts(self, ingredients):
+    #     AmountOfIngredient.objects.bulk_create(
+    #         [AmountOfIngredient(
+    #             ingredient=Ingredient.objects.get(id=ingredient['id']),
+    #             amount=ingredient['amount']
+    #         ) for ingredient in ingredients]
+    #     )
+    
+    # def create(self, validated_data):
+    #     """
+    #     Создание рецепта.
+    #     Доступно только авторизированному пользователю.
+    #     """
+
+    #     ingredients = validated_data.pop('ingredients')
+    #     tags = validated_data.pop('tags')
+    #     author = self.context.get('request').user
+    #     recipe = Recipe.objects.create(author=author, **validated_data)
+    #     self.create_ingredients_amounts(ingredients)
+    #     recipe.tags.set(tags)
+    #     return recipe
+
+    # def update(self, instance, validated_data):
+    #     """
+    #     Изменение рецепта.
+    #     Доступно только автору.
+    #     """
+    #     ingredients = validated_data.pop('ingredients')
+    #     tags = validated_data.pop('tags')
+    #     IngredientsinRecipt.objects.filter(recipe=instance).delete()
+    #     self.create_ingredients_amounts(ingredients, instance)
+    #     instance.tags.set(tags)
+    #     instance.name = validated_data.pop('name')
+    #     instance.text = validated_data.pop('text')
+    #     if validated_data.get('image'):
+    #         instance.image = validated_data.pop('image')
+    #     instance.cooking_time = validated_data.pop('cooking_time')
+    #     instance.save()
+    #     return instance
 
     def to_representation(self, instance):
         return RecipeSerialiser(instance, context={
