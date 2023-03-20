@@ -1,5 +1,4 @@
 from django.shortcuts import get_object_or_404
-from djoser.serializers import UserCreateSerializer
 from drf_extra_fields.fields import Base64ImageField
 from recipes.models import (AmountOfIngredient, Favourite, Ingredient, Recipe,
                             ShoppingList, Tag)
@@ -23,16 +22,6 @@ class CustomUserSerializer(serializers.ModelSerializer):
         if request_user.is_anonymous:
             return False
         return request_user.subscriber.filter(subscribing=obj).exists()
-
-
-class UserCreateSerializer(UserCreateSerializer):
-    """ Сериализатор создания пользователя """
-
-    class Meta:
-        model = User
-        fields = (
-            'email', 'username', 'first_name',
-            'last_name', 'password')
 
 
 class SubscribeSerializer(serializers.ModelSerializer):
