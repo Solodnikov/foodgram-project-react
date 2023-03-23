@@ -1,12 +1,13 @@
 from django.shortcuts import get_object_or_404
 from drf_extra_fields.fields import Base64ImageField
+from rest_framework import serializers
+
 from recipes.models import (AmountOfIngredient, Favourite, Ingredient, Recipe,
                             ShoppingList, Tag)
-from rest_framework import serializers
 from users.models import Subscribe, User
 
 
-class CustomUserSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     """ Сериалайзер для предоставлении сведений о пользователе. """
 
     is_subscribed = serializers.SerializerMethodField()
@@ -38,7 +39,7 @@ class SubscribeSerializer(serializers.ModelSerializer):
         ).data
 
 
-class ShowSubscribeSerializer(CustomUserSerializer):
+class ShowSubscribeSerializer(UserSerializer):
     """ Сериалайзер для отображения подписки. """
     recipes = serializers.SerializerMethodField()
     recipes_count = serializers.SerializerMethodField()
@@ -60,12 +61,21 @@ class ShowSubscribeSerializer(CustomUserSerializer):
         request = self.context.get('request')
         recipes = Recipe.objects.filter(author=obj)
         limit = request.query_params.get('recipes_limit')
-        if limit and isinstance(limit, int):
-            recipes = recipes[:int(limit)]
-        return ShortRecipeSerialiser(
-            recipes,
-            many=True,
-            context={'request': request}).data
+        if limit:
+            try:
+                limit_number = int(limit)
+                recipes = recipes[:limit_number]
+                return ShortRecipeSerialiser(
+                    recipes,
+                    many=True,
+                    context={'request': request}).data
+            except Exception as error:
+                print(error)
+        else:
+            return ShortRecipeSerialiser(
+                recipes,
+                many=True,
+                context={'request': request}).data
 
     def get_recipes_count(self, obj):
         recipes = Recipe.objects.filter(author=obj)
@@ -138,7 +148,7 @@ class RecipeSerialiser(serializers.ModelSerializer):
     Сериалайзер для получения рецепта и списка рецептов.
     """
     tags = TagSerializer(many=True, read_only=True, required=False)
-    author = CustomUserSerializer(read_only=True)
+    author = UserSerializer(read_only=True)
     is_favorited = serializers.SerializerMethodField()
     is_in_shopping_cart = serializers.SerializerMethodField()
     ingredients = serializers.SerializerMethodField()
@@ -197,7 +207,7 @@ class RecipeCreateSerialiser(serializers.ModelSerializer):
     """
     Сериалайзер для создания и обновления рецепта.
     """
-    author = CustomUserSerializer(read_only=True)
+    author = UserSerializer(read_only=True)
     ingredients = AddIngredientRecipeSerializer(many=True)
     tags = serializers.PrimaryKeyRelatedField(
         queryset=Tag.objects.all(), many=True

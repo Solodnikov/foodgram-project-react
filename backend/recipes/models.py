@@ -65,7 +65,13 @@ class Ingredient(models.Model):
     """
     name = models.CharField(
         max_length=200,
-        verbose_name='Название'
+        verbose_name='Название',
+        validators=[
+            RegexValidator(
+                regex=r'^[a-zA-Zа-яА-Я- ]+$',
+                message='Ввод символов, не являющихся буквами, не допустимо',
+            )
+        ]
     )
     measurement_unit = models.CharField(
         max_length=200,
@@ -121,6 +127,46 @@ class AmountOfIngredient(models.Model):
         )
 
 
+# class AmountOfIngredientNext(models.Model):
+#     """ Модель количества ингредиентов.
+#     Связана с моделью рецептов.
+#     """
+#     ingredient = models.ForeignKey(
+#         Ingredient,
+#         on_delete=models.CASCADE,
+#         verbose_name='Ингридиент',
+#         related_name='amount_of_ingredient',
+#     )
+#     amount = models.PositiveIntegerField(
+#         verbose_name='Количество',
+#         validators=[
+#             MinValueValidator(1, 'Значение не может быть меньше 1')
+#         ]
+#     )
+    # recipe = models.ForeignKey(
+    #     Recipe,
+    #     on_delete=models.CASCADE,
+    #     verbose_name='Рецепт',
+    #     related_name='recipes',
+    # )
+
+    # class Meta:
+    #     verbose_name = 'Количество ингредиента'
+    #     verbose_name_plural = 'Количество ингредиентов'
+    #     constraints = (
+    #         UniqueConstraint(
+    #             fields=('ingredient', 'amount',),
+    #             name='unique_ingredient_amount',
+    #         ),
+    #     )
+
+    # def __str__(self):
+    #     return (
+    #         f'{self.ingredient.name} - {self.amount}'
+    #         f' ({self.ingredient.measurement_unit})'
+    #     )
+
+
 class Tag(models.Model):
     """ Тэги
     """
@@ -135,7 +181,7 @@ class Tag(models.Model):
         unique=True,
         validators=[
             RegexValidator(
-                regex=r'^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$',
+                regex=r'^#([A-Fa-f0-9]{3,6})$',
                 message='Cимволы не соответствуют цветовому HEX-коду',
             )
         ]
@@ -168,6 +214,7 @@ class Favourite(models.Model):
         User,
         on_delete=models.CASCADE,
         verbose_name='Пользователь',
+        related_name='+',
     )
 
     class Meta:
@@ -192,6 +239,7 @@ class ShoppingList(models.Model):
         User,
         on_delete=models.CASCADE,
         verbose_name='Пользователь',
+        related_name='+',
     )
 
     class Meta:
