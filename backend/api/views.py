@@ -1,3 +1,13 @@
+from django.db.models import Sum
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
+from djoser.views import UserViewSet
+from rest_framework import permissions, status, viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from api.filters import IngredientFilter, RecipeFilter
 from api.pagination import CustomPagination
 from api.permissions import AuthorAdminAndReadPermission, CustomUserPermission
@@ -5,18 +15,9 @@ from api.serializers import (FavouriteSerializer, IngredientSerializer,
                              RecipeCreateSerialiser, RecipeSerialiser,
                              ShoppingSerializer, SubscribeSerializer,
                              TagSerializer)
-from django.db.models import Sum
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
-from django_filters.rest_framework import DjangoFilterBackend
-from djoser.views import UserViewSet
+from users.models import Subscribe
 from recipes.models import (AmountOfIngredient, Favourite, Ingredient, Recipe,
                             ShoppingList, Tag)
-from rest_framework import permissions, status, viewsets
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from users.models import Subscribe
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
@@ -27,8 +28,8 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
-    filter_backends = (DjangoFilterBackend, )
-    filterset_class = IngredientFilter
+    filter_backends = (IngredientFilter, )
+    search_fields = ('^name', )
 
 
 class FavouriteApiView(APIView):
@@ -125,7 +126,7 @@ class DownloadShoppingCartApiView(APIView):
     def get(self, request):
         request_user = request.user
         ingredients = AmountOfIngredient.objects.filter(
-            recipes__shopping_list__user=request_user).values(
+            recipe__shopping_list__user=request_user).values(
             'ingredient__name',
             'ingredient__measurement_unit'
         ).annotate(amount=Sum('amount'))

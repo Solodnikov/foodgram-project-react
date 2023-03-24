@@ -4,11 +4,17 @@ from .models import (AmountOfIngredient, Favourite, Ingredient, Recipe,
                      ShoppingList, Tag)
 
 
+class AmountOfIngredientInline(admin.TabularInline):
+    model = AmountOfIngredient
+    extra = 1
+
+
 class RecipeAdmin(admin.ModelAdmin):
     empty_value_display = 'отсутствует'
-    list_display = ('id', 'name', 'author', 'cooking_time',)
+    list_display = ('id', 'name', 'author', 'cooking_time')
     ordering = ['name']
     search_fields = ['name', ]
+    inlines = [AmountOfIngredientInline]
 
 
 class IngredientAdmin(admin.ModelAdmin):

@@ -65,17 +65,14 @@ class ShowSubscribeSerializer(UserSerializer):
             try:
                 limit_number = int(limit)
                 recipes = recipes[:limit_number]
-                return ShortRecipeSerialiser(
-                    recipes,
-                    many=True,
-                    context={'request': request}).data
             except Exception as error:
-                print(error)
-        else:
-            return ShortRecipeSerialiser(
-                recipes,
-                many=True,
-                context={'request': request}).data
+                raise TypeError(f'параметр "recipes_limit" содержит символы, '
+                                f'не являющиеся цифрами. '
+                                f'Возникла ошибка - {error}')
+        return ShortRecipeSerialiser(
+            recipes,
+            many=True,
+            context={'request': request}).data
 
     def get_recipes_count(self, obj):
         recipes = Recipe.objects.filter(author=obj)
@@ -173,7 +170,10 @@ class RecipeSerialiser(serializers.ModelSerializer):
         request_user = self.context.get('request').user
         if request_user.is_anonymous:
             return False
-        return request_user.favourites.filter(recipe=obj).exists()
+        return Favourite.objects.filter(
+            user=request_user.id,
+            recipe=obj.id
+        ).exists()
 
     def get_is_subscribed(self, obj):
         request_user = self.context.get('request').user
@@ -185,10 +185,13 @@ class RecipeSerialiser(serializers.ModelSerializer):
         request_user = self.context.get('request').user
         if request_user.is_anonymous:
             return False
-        return request_user.shopping_list.filter(recipe=obj).exists()
+        return ShoppingList.objects.filter(
+            user=request_user.id,
+            recipe=obj.id
+        ).exists()
 
     def get_ingredients(self, obj):
-        ingredients = AmountOfIngredient.objects.filter(recipes=obj)
+        ingredients = AmountOfIngredient.objects.filter(recipe=obj)
         return IngredientsinReciptSerializer(ingredients, many=True).data
 
 
@@ -232,6 +235,7 @@ class RecipeCreateSerialiser(serializers.ModelSerializer):
         ingredients, tags = (
             validated_data.pop('ingredients'), validated_data.pop('tags')
         )
+
         for ingredient in ingredients:
             amount_of_ingredient, flag = (
                 AmountOfIngredient.objects.get_or_create(
@@ -240,6 +244,7 @@ class RecipeCreateSerialiser(serializers.ModelSerializer):
                         pk=ingredient['id']
                     ),
                     amount=ingredient['amount'],
+                    recipe=instance
                 )
             )
             instance.ingredients.add(amount_of_ingredient)
