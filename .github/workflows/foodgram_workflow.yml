@@ -53,15 +53,15 @@ jobs:
           file: backend/Dockerfile
 
 
-  send_message:
-    name: Send message to Telegramm
-    runs-on: ubuntu-latest
-    needs: deploy
-    steps:
+  # send_message:
+  #   name: Send message to Telegramm
+  #   runs-on: ubuntu-latest
+  #   needs: deploy
+  #   steps:
 
-    - name: send message
-      uses: appleboy/telegram-action@master
-      with:
-        to: ${{ secrets.TELEGRAM_TO }}
-        token: ${{ secrets.TELEGRAM_TOKEN }}
-        message: ${{ github.workflow }} - Successful push repository ${{ github.event.repository.name }} in adress ${{ github.repositoryUrl }} did ${{ github.actor }}. Reason - ${{ github.event.commits[0].message }}. Commit in adress - https://github.com/${{ github.repository }}/commit/${{github.sha}}
+  #   - name: send message
+  #     uses: appleboy/telegram-action@master
+  #     with:
+  #       to: ${{ secrets.TELEGRAM_TO }}
+  #       token: ${{ secrets.TELEGRAM_TOKEN }}
+  #       message: ${{ github.workflow }} - Successful push repository ${{ github.event.repository.name }} in adress ${{ github.repositoryUrl }} did ${{ github.actor }}. Reason - ${{ github.event.commits[0].message }}. Commit in adress - https://github.com/${{ github.repository }}/commit/${{github.sha}}
