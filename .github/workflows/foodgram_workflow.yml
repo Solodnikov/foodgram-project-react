@@ -67,11 +67,9 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.PASSPHRASE }}
         script: |
-          sudo docker compose stop
-          sudo docker compose rm foodgram_backend -f
-          # sudo docker image rm ${{ secrets.DOCKER_USERNAME }}/yamdb:latest
+          # sudo docker compose stop
+          # sudo docker compose rm foodgram_backend -f
           cd ~
-          mkdir ${{ github.event.repository.name }}
           cd ${{ github.event.repository.name }}
           rm .env
           touch .env
@@ -83,8 +81,11 @@ jobs:
           echo DB_PORT=${{ secrets.DB_PORT }} >> .env
           echo DB_PORT=${{ secrets.SECRET_KEY }} >> .env
           sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram_backend:latest
-          sudo docker compose up -d --build
+          # sudo docker compose up -d --build
+          sudo docker imadge ls
           sudo docker ps
+          ls
+          pwd
   
   # send_message:
   #   name: Send message to Telegramm
