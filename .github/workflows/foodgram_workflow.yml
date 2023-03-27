@@ -85,6 +85,7 @@ jobs:
           sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram_backend:latest
           sudo docker compose up -d --build
           sudo docker ps
+  
   # send_message:
   #   name: Send message to Telegramm
   #   runs-on: ubuntu-latest
