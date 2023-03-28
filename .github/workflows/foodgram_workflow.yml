@@ -97,7 +97,7 @@ jobs:
           sudo docker compose rm ${{ secrets.DOCKER_USERNAME }}/foodgram_frontend -f
           cd ~
           cd ${{ github.event.repository.name }}
-          cd infra
+          # cd infra
           rm .env
           touch .env
           echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
