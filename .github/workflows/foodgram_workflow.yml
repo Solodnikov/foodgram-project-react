@@ -98,7 +98,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.PASSPHRASE }}
         script: |
-          # sudo docker compose stop
+          sudo docker compose stop
           # sudo docker compose rm foodgram_backend -f
           cd ~
           cd ${{ github.event.repository.name }}
