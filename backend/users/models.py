@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
+from django.core.validators import RegexValidator
 
 from users.validators import validate_username
 
@@ -25,16 +26,34 @@ class User(AbstractUser):
     first_name = models.CharField(
         verbose_name='Имя',
         max_length=settings.FIRST_NAME_MAX_LEN,
+        validators=[
+            RegexValidator(
+                regex=r'^[а-яА-Яa-zA-Z ]+\Z',
+                message=(
+                    'Не бывает имен с цифорками и всякими закорючками, '
+                    'допустимы только буквы.'
+                )
+            )
+        ]
     )
     last_name = models.CharField(
         verbose_name='Фамилия',
         max_length=settings.LAST_NAME_MAX_LEN,
+        validators=[
+            RegexValidator(
+                regex=r'^[а-яА-Яa-zA-Z ]+\Z',
+                message=(
+                    'Не бывает фамилий с цифорками и всякими закорючками, '
+                    'допустимы только буквы.'
+                )
+            )
+        ]
     )
     password = models.CharField(
         'Пароль',
         max_length=settings.PASSWORD_MAX_LEN,
-        blank=True,
-        null=True,
+        # blank=True,
+        # null=True,
     )
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'password']
     USERNAME_FIELD = 'email'

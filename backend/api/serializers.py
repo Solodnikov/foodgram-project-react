@@ -201,6 +201,14 @@ class AddIngredientRecipeSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField()
     amount = serializers.IntegerField()
 
+    def validate_amount(self, value):
+        if 10000 > value <= 0:
+            raise serializers.ValidationError(
+                'Количество ингредиентов должно быть меньше 0'
+                ' и больше 10000.'
+            )
+        return value
+
     class Meta:
         model = AmountOfIngredient
         fields = ('id', 'amount')
@@ -230,6 +238,37 @@ class RecipeCreateSerialiser(serializers.ModelSerializer):
             'text',
             'cooking_time'
         )
+
+    def validate_cooking_time(self, value):
+        if 10000 > value <= 0:
+            raise serializers.ValidationError(
+                'Время готовки не должно быть меньше 0'
+                ' и больше 10000.'
+            )
+        return value
+
+    def validate_ingredients(self, value):
+        ingredients = value
+        if not ingredients:
+            raise serializers.ValidationError(
+                'Нужен хотя бы один ингредиент!'
+            )
+        return value
+
+    def validate_tags(self, value):
+        tags = value
+        if not tags:
+            raise serializers.ValidationError(
+                'Нужно выбрать хотя бы один тег!'
+            )
+        tags_list = []
+        for tag in tags:
+            if tag in tags_list:
+                raise serializers.ValidationError(
+                    'Теги должны быть уникальными!'
+                )
+            tags_list.append(tag)
+        return value
 
     def create_ingredients_and_tags(self, instance, validated_data):
         ingredients, tags = (
