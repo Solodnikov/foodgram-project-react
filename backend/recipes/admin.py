@@ -2,11 +2,13 @@ from django.contrib import admin
 
 from .models import (AmountOfIngredient, Favourite, Ingredient, Recipe,
                      ShoppingList, Tag)
+from .forms import AtLeastOneFormSet
 
 
 class AmountOfIngredientInline(admin.TabularInline):
     model = AmountOfIngredient
     extra = 1
+    formset = AtLeastOneFormSet
 
 
 class RecipeAdmin(admin.ModelAdmin):

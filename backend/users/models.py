@@ -14,7 +14,7 @@ class User(AbstractUser):
         max_length=settings.USERNAME_MAX_LEN,
         unique=True,
         validators=[
-            UnicodeUsernameValidator,
+            UnicodeUsernameValidator(),
             validate_username
         ]
     )

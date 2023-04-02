@@ -202,9 +202,9 @@ class AddIngredientRecipeSerializer(serializers.ModelSerializer):
     amount = serializers.IntegerField()
 
     def validate_amount(self, value):
-        if 10000 > value <= 0:
+        if 10000 > value < 0:
             raise serializers.ValidationError(
-                'Количество ингредиентов должно быть меньше 0'
+                'Количество ингредиентов не должно быть 0 и меньше'
                 ' и больше 10000.'
             )
         return value
@@ -240,9 +240,9 @@ class RecipeCreateSerialiser(serializers.ModelSerializer):
         )
 
     def validate_cooking_time(self, value):
-        if 10000 > value <= 0:
+        if 10000 > value < 0:
             raise serializers.ValidationError(
-                'Время готовки не должно быть меньше 0'
+                'Время готовки не должно быть 0 и меньше'
                 ' и больше 10000.'
             )
         return value
