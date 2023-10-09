@@ -1,18 +1,8 @@
-# praktikum_new_diplom
-
+# Продуктовый помощник Foodgram
 ![workflow status](https://github.com/solodnikov/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg?event=push&branch=master)
 ![](https://img.shields.io/badge/Django-3.2.18-orange)
 ![](https://img.shields.io/badge/Python-3.7-brightgreen)
 ![](https://img.shields.io/badge/DjangoRestFramework-3.14.0-red)
-
-
-# Продуктовый помощник Foodgram
-
-## Проект доступен
-- Проект запущен и доступен по http://nymnym.bounceme.net/signin
-- Админ панель http://nymnym.bounceme.net/admin
-- Админ электронная почта: alex@example.com
-- Админ пароль: password
 
 ### Описание
 Сервис, на котором пользователи будут публиковать рецепты, добавлять чужие рецепты в избранное и подписываться на публикации других авторов. Сервис «Список покупок» позволит пользователям создавать список продуктов, которые нужно купить для приготовления выбранных блюд.
